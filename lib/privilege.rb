@@ -1,5 +1,5 @@
 class Privilege < ActiveRecord::Base
-  has_and_belongs_to_many :groups
-
+  has_many :groups, :through=>:group_privileges
+  has_many :group_privileges, :dependent=>:destroy
   validates_presence_of :name
 end

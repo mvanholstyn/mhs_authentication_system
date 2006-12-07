@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
   has_many :users
-  has_and_belongs_to_many :privileges
-  
+  has_many :privileges, :through=>:group_privileges
+  has_many :group_privileges, :dependent=>:destroy
+
   validates_presence_of :name
 end
