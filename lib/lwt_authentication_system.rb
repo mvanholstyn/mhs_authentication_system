@@ -9,11 +9,11 @@
 #FIXME: restrict_to
 #
 # = Model
-#FIXME: mix in group/priv model settings
 #TODO: validate user.group_id
 #TODO: Allow custom validation msg for group and priv validations
 #TODO: allow configuration of username, password_hash, and salt column names?
 #TODO: enforce only one acts_as_authenticated
+#TODO: Revisit mixin for group/priv/group_priv
 #
 # = Preferences
 #TODO: implement preferences
@@ -29,7 +29,7 @@
 #
 # Here is the basic usage:
 #
-# 1. acts_as_login_controller, redirect_after_login, redirect_to
+# 1. acts_as_login_controller, redirect_after_login, restrict_to
 # 2. acts_as_authenticated
 # 3. database
 module LWT
@@ -116,7 +116,6 @@ module LWT
           User.current_user
         end
 
-      private
         def set_current_user user = nil
           if user.is_a? User
             session[:current_user_id] = user.id
@@ -134,6 +133,7 @@ module LWT
 
     private
       def self.included base
+        base.extend ClassMethods
         base.send :include, InstanceMethods
         base.cattr_accessor :lwt_authentication_system_options
         
@@ -146,6 +146,22 @@ module LWT
       end
 
     public
+      module ClassMethods
+        # Sets the arguments to be passed to redirect_to after a user 
+        # successfully logs in. The block will be passed the controller
+        # and the logged in user.
+        def redirect_after_login &blk
+          self.lwt_authentication_system_options[:redirect_after_login] = blk
+        end
+
+        # Sets the arguments to be passed to redirect_to after a user 
+        # successfully logs out. The block will be passed the controller.
+        # This defaults to the login action.
+        def redirect_after_logout &blk
+          self.lwt_authentication_system_options[:redirect_after_logout] = blk          
+        end
+      end
+      
       module InstanceMethods
         # The login action performs three different tasks, depending on 
         # the context.
@@ -181,24 +197,10 @@ module LWT
           self.set_current_user
           redirect_to self.class.lwt_authentication_system_options[:redirect_after_logout].call( self )
         end
-
-        # Sets the arguments to be passed to redirect_to after a user 
-        # successfully logs in. The block will be passed the controller
-        # and the logged in user.
-        def redirect_after_login &blk
-          self.lwt_authentication_system_options[:redirect_after_login] = blk
-        end
-
-        # Sets the arguments to be passed to redirect_to after a user 
-        # successfully logs out. The block will be passed the controller.
-        # This defaults to the login action.
-        def redirect_after_logout &blk
-          self.lwt_authentication_system_options[:redirect_after_logout] = blk          
-        end
-      
+        
       private
         def do_redirect_after_login
-          if track_pre_login_url and session[:pre_login_url]
+          if self.class.lwt_authentication_system_options[:track_pre_login_url] and session[:pre_login_url]
             redirect_to session[:pre_login_url]
             session[:pre_login_url] = nil
           else
@@ -294,7 +296,11 @@ module LWT
           return if pwd.empty?
           @password_validation ||= {}
           @password_validation[:password] = pwd
-          self.password_hash = self.class.hash_password( pwd )
+          self.password_hash = if self.class.lwt_authentication_system_options[:use_salt]
+            self.class.lwt_authentication_system_options[:hash_password].call( pwd, user.salt )
+          else
+            self.class.lwt_authentication_system_options[:hash_password].call( pwd )
+          end
         end
 
         # Stores the confirmation password for validation.
