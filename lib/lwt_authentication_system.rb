@@ -56,8 +56,6 @@ module LWT
       
     public
       module ClassMethods
-        
-      protected
         # This is used to restrict access to action based on privileges of the current user.
         # This method takes a list of privileges which should be allowes, as well as the options
         # hash which will be passed to before_filter.
@@ -118,7 +116,7 @@ module LWT
           User.current_user
         end
 
-      protected
+      private
         def set_current_user user = nil
           if user.is_a? User
             session[:current_user_id] = user.id
@@ -184,7 +182,6 @@ module LWT
           redirect_to self.class.lwt_authentication_system_options[:redirect_after_logout].call( self )
         end
 
-      protected
         # Sets the arguments to be passed to redirect_to after a user 
         # successfully logs in. The block will be passed the controller
         # and the logged in user.
@@ -214,7 +211,6 @@ module LWT
     module Model
       module SingletonMethods
 
-      protected
         # Includes the login and logout actions into this controller.
         #
         # Valid options:
