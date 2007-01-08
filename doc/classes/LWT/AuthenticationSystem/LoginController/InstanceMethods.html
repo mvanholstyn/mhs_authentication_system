@@ -80,10 +80,8 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000013">login</a>&nbsp;&nbsp;
-      <a href="#M000014">logout</a>&nbsp;&nbsp;
-      <a href="#M000015">redirect_after_login</a>&nbsp;&nbsp;
-      <a href="#M000016">redirect_after_logout</a>&nbsp;&nbsp;
+      <a href="#M000016">login</a>&nbsp;&nbsp;
+      <a href="#M000017">logout</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -105,11 +103,11 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
 
         <div class="method-heading">
-          <a href="#M000013" class="method-signature">
+          <a href="#M000016" class="method-signature">
           <span class="method-name">login</span><span class="method-args">()</span>
           </a>
         </div>
@@ -124,7 +122,7 @@ login the user.
 
 </li>
 <li>If a user is already logged in, they will be redirected to the page defined
-in <a href="InstanceMethods.html#M000015">redirect_after_login</a>
+in redirect_after_login
 
 </li>
 <li>Else, the login template will be rendered.
@@ -132,38 +130,38 @@ in <a href="InstanceMethods.html#M000015">redirect_after_login</a>
 </li>
 </ul>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000013-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000013-source">
+            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000016-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 158</span>
-158:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span>
-159:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span>
-160:             <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">login</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:user</span>]
-161:             <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@user</span>
-162:               <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_current_user</span> <span class="ruby-ivar">@user</span>
-163:               <span class="ruby-identifier">do_redirect_after_login</span>
-164:               <span class="ruby-keyword kw">return</span>
-165:             <span class="ruby-keyword kw">else</span>
-166:               <span class="ruby-identifier">flash</span>.<span class="ruby-identifier">now</span>[<span class="ruby-identifier">:error</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:invalid_login_flash</span>]
-167:             <span class="ruby-keyword kw">end</span>
-168:           <span class="ruby-keyword kw">elsif</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">current_user</span>
-169:             <span class="ruby-identifier">do_redirect_after_login</span>
-170:             <span class="ruby-keyword kw">return</span>
-171:           <span class="ruby-keyword kw">else</span>
-172:             <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
-173:             <span class="ruby-identifier">flash</span>.<span class="ruby-identifier">now</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:login_flash</span>]
-174:           <span class="ruby-keyword kw">end</span>
-175:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 175</span>
+175:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span>
+176:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span>
+177:             <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">login</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:user</span>]
+178:             <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@user</span>
+179:               <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_current_user</span> <span class="ruby-ivar">@user</span>
+180:               <span class="ruby-identifier">do_redirect_after_login</span>
+181:               <span class="ruby-keyword kw">return</span>
+182:             <span class="ruby-keyword kw">else</span>
+183:               <span class="ruby-identifier">flash</span>.<span class="ruby-identifier">now</span>[<span class="ruby-identifier">:error</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:invalid_login_flash</span>]
+184:             <span class="ruby-keyword kw">end</span>
+185:           <span class="ruby-keyword kw">elsif</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">current_user</span>
+186:             <span class="ruby-identifier">do_redirect_after_login</span>
+187:             <span class="ruby-keyword kw">return</span>
+188:           <span class="ruby-keyword kw">else</span>
+189:             <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
+190:             <span class="ruby-identifier">flash</span>.<span class="ruby-identifier">now</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:login_flash</span>]
+191:           <span class="ruby-keyword kw">end</span>
+192:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
 
         <div class="method-heading">
-          <a href="#M000014" class="method-signature">
+          <a href="#M000017" class="method-signature">
           <span class="method-name">logout</span><span class="method-args">()</span>
           </a>
         </div>
@@ -171,74 +169,18 @@ in <a href="InstanceMethods.html#M000015">redirect_after_login</a>
         <div class="method-description">
           <p>
 The logout action resets the session and rediects the user to the page
-defined in <a
-href="InstanceMethods.html#M000016">redirect_after_logout</a>.
+defined in redirect_after_logout.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000014-source">
+            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000017-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 179</span>
-179:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">logout</span>
-180:           <span class="ruby-identifier">reset_session</span>
-181:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_current_user</span>
-182:           <span class="ruby-identifier">redirect_to</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_logout</span>].<span class="ruby-identifier">call</span>( <span class="ruby-keyword kw">self</span> )
-183:         <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
-
-        <div class="method-heading">
-          <a href="#M000015" class="method-signature">
-          <span class="method-name">redirect_after_login</span><span class="method-args">(&amp;blk)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Sets the arguments to be passed to redirect_to after a user successfully
-logs in. The block will be passed the controller and the logged in user.
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000015-source">
-<pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 188</span>
-188:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_login</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-189:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_login</span>] = <span class="ruby-identifier">blk</span>
-190:         <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
-
-        <div class="method-heading">
-          <a href="#M000016" class="method-signature">
-          <span class="method-name">redirect_after_logout</span><span class="method-args">(&amp;blk)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Sets the arguments to be passed to redirect_to after a user successfully
-logs out. The block will be passed the controller. This defaults to the
-login action.
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000016-source">
-<pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 195</span>
-195:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_logout</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-196:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_logout</span>] = <span class="ruby-identifier">blk</span>          
-197:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 196</span>
+196:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">logout</span>
+197:           <span class="ruby-identifier">reset_session</span>
+198:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">set_current_user</span>
+199:           <span class="ruby-identifier">redirect_to</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_logout</span>].<span class="ruby-identifier">call</span>( <span class="ruby-keyword kw">self</span> )
+200:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

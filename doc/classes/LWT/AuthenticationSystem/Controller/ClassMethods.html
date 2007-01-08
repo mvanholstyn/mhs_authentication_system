@@ -143,11 +143,11 @@ after_login_redirect. Defatut: true
             onclick="toggleCode('M000011-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000011-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 108</span>
-108:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">acts_as_login_controller</span>( <span class="ruby-identifier">options</span> = {} )
-109:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">LWT</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthenticationSystem</span><span class="ruby-operator">::</span><span class="ruby-constant">LoginController</span>
-110:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">options</span>
-111:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 109</span>
+109:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">acts_as_login_controller</span>( <span class="ruby-identifier">options</span> = {} )
+110:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">LWT</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthenticationSystem</span><span class="ruby-operator">::</span><span class="ruby-constant">LoginController</span>
+111:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">options</span>
+112:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -172,10 +172,10 @@ return value for the before_filter. This defaults to redirecting to the
             onclick="toggleCode('M000008-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000008-source">
 <pre>
-    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 80</span>
-80:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_not_logged_in</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-81:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">not_logged_in</span> = <span class="ruby-identifier">blk</span>
-82:         <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 81</span>
+81:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_not_logged_in</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+82:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">not_logged_in</span> = <span class="ruby-identifier">blk</span>
+83:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -199,10 +199,10 @@ be the return value for the before_filter.
             onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000009-source">
 <pre>
-    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 86</span>
-86:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_permission_denied</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-87:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">permission_denied</span> = <span class="ruby-identifier">blk</span>
-88:         <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 87</span>
+87:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_permission_denied</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+88:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">permission_denied</span> = <span class="ruby-identifier">blk</span>
+89:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -226,10 +226,10 @@ will be the return value for the before_filter.
             onclick="toggleCode('M000010-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000010-source">
 <pre>
-    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 92</span>
-92:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_permission_granted</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-93:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">permission_granted</span> = <span class="ruby-identifier">blk</span>
-94:         <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 93</span>
+93:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_permission_granted</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+94:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">permission_granted</span> = <span class="ruby-identifier">blk</span>
+95:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -254,21 +254,21 @@ allowes, as well as the options hash which will be passed to before_filter.
             onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000007-source">
 <pre>
-    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 62</span>
-62:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restrict_to</span> <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
-63:           <span class="ruby-identifier">options</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">is_a?</span>( <span class="ruby-constant">Hash</span> ) <span class="ruby-operator">?</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span> <span class="ruby-operator">:</span> {}
-64: 
-65:           <span class="ruby-identifier">before_filter</span>( <span class="ruby-identifier">options</span> ) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
-66:             <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">User</span>
-67:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">session</span>[<span class="ruby-identifier">:pre_login_url</span>] = <span class="ruby-identifier">c</span>.<span class="ruby-identifier">params</span>
-68:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">not_logged_in</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span> )
-69:             <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">has_privilege?</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">args</span> )
-70:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">permission_granted</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span>, <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span> )
-71:             <span class="ruby-keyword kw">else</span>
-72:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">permission_denied</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span>, <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span> )
-73:             <span class="ruby-keyword kw">end</span>
-74:           <span class="ruby-keyword kw">end</span>
-75:         <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 63</span>
+63:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restrict_to</span> <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
+64:           <span class="ruby-identifier">options</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">is_a?</span>( <span class="ruby-constant">Hash</span> ) <span class="ruby-operator">?</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span> <span class="ruby-operator">:</span> {}
+65: 
+66:           <span class="ruby-identifier">before_filter</span>( <span class="ruby-identifier">options</span> ) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+67:             <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">User</span>
+68:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">session</span>[<span class="ruby-identifier">:pre_login_url</span>] = <span class="ruby-identifier">c</span>.<span class="ruby-identifier">params</span>
+69:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">not_logged_in</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span> )
+70:             <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">has_privilege?</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">args</span> )
+71:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">permission_granted</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span>, <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span> )
+72:             <span class="ruby-keyword kw">else</span>
+73:               <span class="ruby-identifier">c</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">permission_denied</span>.<span class="ruby-identifier">call</span>( <span class="ruby-identifier">c</span>, <span class="ruby-identifier">c</span>.<span class="ruby-identifier">current_user</span> )
+74:             <span class="ruby-keyword kw">end</span>
+75:           <span class="ruby-keyword kw">end</span>
+76:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

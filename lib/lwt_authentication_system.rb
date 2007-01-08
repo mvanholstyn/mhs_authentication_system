@@ -9,10 +9,11 @@
 #FIXME: restrict_to
 #
 # = Model
+#FIXME: Implement salt
 #TODO: validate user.group_id
 #TODO: Allow custom validation msg for group and priv validations
 #TODO: allow configuration of username, password_hash, and salt column names?
-#TODO: enforce only one acts_as_authenticated
+#TODO: enforce only one acts_as_login_model
 #TODO: Revisit mixin for group/priv/group_priv
 #
 # = Preferences
@@ -30,7 +31,7 @@
 # Here is the basic usage:
 #
 # 1. acts_as_login_controller, redirect_after_login, restrict_to
-# 2. acts_as_authenticated
+# 2. acts_as_login_model
 # 3. database
 module LWT
   module AuthenticationSystem
@@ -222,7 +223,9 @@ module LWT
         #   Default: "Username cannot be blank"
         # - :username_unique_validation_message - Error message used when the username is
         #   already in use. Default: "Username has already been taken"
-        def acts_as_authenticated options = {}
+        # - :use_salt - If true, the hash_password method will be sent a salt along with a
+        #   password. The salt will be stored in database column salt. Defaults: false
+        def acts_as_login_model options = {}
           self.send :include, LWT::AuthenticationSystem::Model
           self.lwt_authentication_system_options.merge options
         end

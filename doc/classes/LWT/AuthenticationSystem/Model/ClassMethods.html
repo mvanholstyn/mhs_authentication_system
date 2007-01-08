@@ -139,10 +139,10 @@ plaintext password and salt (if salt is enabled) as the arguments.
             onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000003-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 274</span>
-274:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hash_password</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-275:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>] = <span class="ruby-identifier">blk</span>
-276:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 279</span>
+279:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hash_password</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+280:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>] = <span class="ruby-identifier">blk</span>
+281:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -167,18 +167,18 @@ will be removed and will be checked against the password of the user found
             onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000002-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 259</span>
-259:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span> <span class="ruby-identifier">params</span>
-260:           <span class="ruby-identifier">password</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">delete</span>( <span class="ruby-identifier">:password</span> )
-261:           <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>, <span class="ruby-identifier">:include</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">:group</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:privileges</span> }
-262:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">user</span>
-263: 
-264:           <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:use_salt</span>]
-265:             <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_hash</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">password</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">salt</span> )
-266:           <span class="ruby-keyword kw">else</span>
-267:             <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_hash</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">password</span> )
-268:           <span class="ruby-keyword kw">end</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">user</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>
-269:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 264</span>
+264:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span> <span class="ruby-identifier">params</span>
+265:           <span class="ruby-identifier">password</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">delete</span>( <span class="ruby-identifier">:password</span> )
+266:           <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>, <span class="ruby-identifier">:include</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">:group</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:privileges</span> }
+267:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">user</span>
+268: 
+269:           <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:use_salt</span>]
+270:             <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_hash</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">password</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">salt</span> )
+271:           <span class="ruby-keyword kw">else</span>
+272:             <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_hash</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">password</span> )
+273:           <span class="ruby-keyword kw">end</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">user</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>
+274:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
