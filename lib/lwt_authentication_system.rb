@@ -54,7 +54,7 @@ module LWT
         base.on_permission_denied { |c,u| false }
         base.on_permission_granted { |c,u| true }
       end
-      
+
     public
       module ClassMethods
         # This is used to restrict access to action based on privileges of the current user.
@@ -103,7 +103,7 @@ module LWT
         #   when a user attempts to login with invalid login credentials.
         #   Default: "Invalid login credentials"
         # - :track_pre_login_url - If true and the user attempts to go to a specific
-        #   page before logging in, after logging in they will be redirected to 
+        #   page before logging in, after logging in they will be redirected to
         #   the page they initially requested rather then the page defined by the
         #   after_login_redirect. Defatut: true
         def acts_as_login_controller( options = {} )
@@ -137,39 +137,39 @@ module LWT
         base.extend ClassMethods
         base.send :include, InstanceMethods
         base.cattr_accessor :lwt_authentication_system_options
-        
-        base.lwt_authentication_system_options = { 
+
+        base.lwt_authentication_system_options = {
           :login_flash => "Please login",
           :invalid_login_flash => "Invalid login credentials",
-          :track_pre_login_url => true 
+          :track_pre_login_url => true
         }
         base.redirect_after_logout { |c| { :action => 'login' } }
       end
 
     public
       module ClassMethods
-        # Sets the arguments to be passed to redirect_to after a user 
+        # Sets the arguments to be passed to redirect_to after a user
         # successfully logs in. The block will be passed the controller
         # and the logged in user.
         def redirect_after_login &blk
           self.lwt_authentication_system_options[:redirect_after_login] = blk
         end
 
-        # Sets the arguments to be passed to redirect_to after a user 
+        # Sets the arguments to be passed to redirect_to after a user
         # successfully logs out. The block will be passed the controller.
         # This defaults to the login action.
         def redirect_after_logout &blk
-          self.lwt_authentication_system_options[:redirect_after_logout] = blk          
+          self.lwt_authentication_system_options[:redirect_after_logout] = blk
         end
       end
-      
+
       module InstanceMethods
-        # The login action performs three different tasks, depending on 
+        # The login action performs three different tasks, depending on
         # the context.
         #
         # - If resuest.post? the parameters in params[:user] will be used to
         #   try to login the user.
-        # - If a user is already logged in, they will be redirected to the 
+        # - If a user is already logged in, they will be redirected to the
         #   page defined in redirect_after_login
         # - Else, the login template will be rendered.
         def login
@@ -198,7 +198,7 @@ module LWT
           self.set_current_user
           redirect_to self.class.lwt_authentication_system_options[:redirect_after_logout].call( self )
         end
-        
+
       private
         def do_redirect_after_login
           if self.class.lwt_authentication_system_options[:track_pre_login_url] and session[:pre_login_url]
@@ -254,7 +254,7 @@ module LWT
           :message => base.lwt_authentication_system_options[:username_unique_validation_message]
         base.send :validate, :validate_password
       end
- 
+
     public
       module ClassMethods
         attr_accessor :current_user, :lwt_authentication_system_options
@@ -276,8 +276,12 @@ module LWT
         # Takes a block which is used to hash the users password. The block
         # takes the plaintext password and salt (if salt is enabled) as the
         # arguments.
-        def hash_password &blk
-          self.lwt_authentication_system_options[:hash_password] = blk
+        def hash_password( *args, &blk )
+          if block_given?
+            self.lwt_authentication_system_options[:hash_password] = blk
+          else
+            self.lwt_authentication_system_options[:hash_password].call *args
+          end
         end
       end
 
@@ -293,7 +297,7 @@ module LWT
           end
           false
         end
-        
+
         # Stores the password for validation, as well as sets the password_hash method for database.
         def password=( pwd )
           return if pwd.empty?
