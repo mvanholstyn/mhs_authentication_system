@@ -247,7 +247,7 @@ module LWT
           MD5.hexdigest( pwd )
         end
         
-        base.validate_password do |pwd|
+        base.validate_password do |user,pwd|
           true
         end
 
@@ -333,7 +333,7 @@ module LWT
             errors.add :password, self.class.lwt_authentication_system_options[:password_validation_message]
             pass = false
           end
-          pass and self.class.lwt_authentication_system_options[:validate_password].call( @password_validation[:password] )
+          pass and self.class.lwt_authentication_system_options[:validate_password].call( self, @password_validation[:password] )
        end
       end
     end
