@@ -246,6 +246,10 @@ module LWT
           require 'md5'
           MD5.hexdigest( pwd )
         end
+        
+        base.validate_password do |pwd|
+          true
+        end
 
         base.send :belongs_to, :group
         base.send :validates_presence_of, :username,
@@ -266,22 +270,27 @@ module LWT
           user = User.find :first, :conditions => params, :include => { :group => :privileges }
           return nil unless user
 
-          if self.lwt_authentication_system_options[:use_salt]
-            user.password_hash == self.lwt_authentication_system_options[:hash_password].call( password, user.salt )
-          else
-            user.password_hash == self.lwt_authentication_system_options[:hash_password].call( password )
-          end ? user : nil
+          args = [ password ]
+          args << user.salt if self.lwt_authentication_system_options[:use_salt]
+          self.hash_password( *args ) ? user : nil
         end
 
-        # Takes a block which is used to hash the users password. The block
-        # takes the plaintext password and salt (if salt is enabled) as the
-        # arguments.
+        # This method does two things:
+        # - If given a block, that blocked is stored and used when hashing the users password.
+        #   When the block is called, it will be given the password and the salt, if enabled.
+        # - Else, the stored block is called, giving passing it all arguments
         def hash_password( *args, &blk )
-          if block_given?
+          if blk
             self.lwt_authentication_system_options[:hash_password] = blk
           else
             self.lwt_authentication_system_options[:hash_password].call *args
           end
+        end
+        
+        # Takes a block to be used when validating the password. The block
+        # will be passed one parameter, the password.
+        def validate_password( &blk )
+          self.lwt_authentication_system_options[:validate_password] = blk
         end
       end
 
@@ -319,12 +328,13 @@ module LWT
 
       private
         def validate_password
+          pass = true
           if @password_validation and @password_validation[:password] != @password_validation[:password_confirmation]
             errors.add :password, self.class.lwt_authentication_system_options[:password_validation_message]
-            return false
+            pass = false
           end
-          true
-        end
+          pass and self.class.lwt_authentication_system_options[:validate_password].call( @password_validation[:password] )
+       end
       end
     end
   end
