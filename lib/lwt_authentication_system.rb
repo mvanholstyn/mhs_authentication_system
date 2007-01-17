@@ -9,7 +9,6 @@
 #FIXME: restrict_to
 #
 # = Model
-#FIXME: Implement salt
 #TODO: validate user.group_id
 #TODO: Allow custom validation msg for group and priv validations
 #TODO: allow configuration of username, password_hash, and salt column names?
@@ -246,7 +245,7 @@ module LWT
           require 'md5'
           MD5.hexdigest( pwd )
         end
-        
+
         base.validate_password do |user,pwd|
           true
         end
@@ -286,7 +285,7 @@ module LWT
             self.lwt_authentication_system_options[:hash_password].call *args
           end
         end
-        
+
         # Takes a block to be used when validating the password. The block
         # will be passed one parameter, the password.
         def validate_password( &blk )

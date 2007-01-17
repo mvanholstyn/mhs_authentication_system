@@ -1,0 +1,15 @@
+Description:
+    The generator takes a model name as its argument.  The model name may be
+    given in CamelCase or under_score and should not be suffixed with 'Model'.
+
+    The generator creates a model class in app/models, a login controller in
+    app/controller, and a migration in db/migrate.
+
+Example:
+    ./script/generate lwt_authentication_system
+
+    This will create:
+        Model:      app/models/user.rb
+        Controller  app/controller/users_controller.rb
+        Migration:  db/migrate/XXX_add_lwt_authentication_system.rb
+
