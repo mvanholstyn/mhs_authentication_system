@@ -1,7 +1,7 @@
 # = Controller
 #FIXME: Update how restrict_to works so that it can be ignored in subcasses
-#TODO: automatically set on_not_logged_in to redirect to the login_controller/login
-#TODO: Allow model to be something other than User
+#FIXME automatically set on_not_logged_in to redirect to the login_controller/login
+#FIXME: Allow model to be something other than User
 #TODO: Before/after login callbacks?
 #TODO: enforce only one acts_as_login_controller
 #
@@ -20,9 +20,6 @@
 #
 # = Object privs
 #TODO: Object privileges
-#
-# = Migration
-#TODO: migration
 
 # This authentication system allows for an easy, plug and play solution
 # to all you authentication and privilege needs.
@@ -241,6 +238,7 @@ module LWT
           :username_unique_validation_message => "Username has already been taken",
           :use_salt => false
         }
+
         base.hash_password do |pwd|
           require 'md5'
           MD5.hexdigest( pwd )
@@ -266,7 +264,7 @@ module LWT
         # be removed and will be checked against the password of the user found (if any).
         def login params
           password = params.delete( :password )
-          user = User.find :first, :conditions => params, :include => { :group => :privileges }
+          user = self.find :first, :conditions => params, :include => { :group => :privileges }
           return nil unless user
 
           args = [ password ]
