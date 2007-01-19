@@ -269,7 +269,7 @@ module LWT
 
           args = [ password ]
           args << user.salt if self.lwt_authentication_system_options[:use_salt]
-          self.hash_password( *args ) ? user : nil
+          self.hash_password( *args ) == user.password_hash ? user : nil
         end
 
         # This method does two things:
