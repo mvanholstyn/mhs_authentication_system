@@ -327,11 +327,11 @@ module LWT
         def validate_password
           pass = true
           if @password_validation
+            pass = self.class.lwt_authentication_system_options[:validate_password].call( self, @password_validation[:password] )
             if @password_validation[:password] != @password_validation[:password_confirmation]
               errors.add :password, self.class.lwt_authentication_system_options[:password_validation_message]
               pass = false
             end
-            pass = pass and self.class.lwt_authentication_system_options[:validate_password].call( self, @password_validation[:password] )
           end
           pass
         end
