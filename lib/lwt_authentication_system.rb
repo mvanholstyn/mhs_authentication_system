@@ -1,8 +1,13 @@
-# = Controller
-#FIXME: Update how restrict_to works so that it can be ignored in subcasses
-#FIXME: automatically set on_not_logged_in to redirect to the login_controller/login
-#FIXME: Allow model to be something other than User
+# = Plugin
+#FIXME: Add Tests!
+#FIXME: Split this into a few files 
 #FIXME: Add routing
+#
+# = Controller
+#FIXME: automatically set on_not_logged_in to redirect to the login_controller/login (not hardcoded user/login)
+#FIXME: Allow model to be something other than User
+#FIXME: instance level restrict_to
+#TODO: Update how restrict_to works so that it can be ignored in subcasses
 #TODO: Before/after login callbacks?
 #TODO: enforce only one acts_as_login_controller
 #
@@ -21,7 +26,6 @@
 #
 # = Object privs
 #TODO: Object privileges
-
 module LWT
   module AuthenticationSystem
     module Controller
