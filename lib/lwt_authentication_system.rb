@@ -1,7 +1,8 @@
 # = Controller
 #FIXME: Update how restrict_to works so that it can be ignored in subcasses
-#FIXME automatically set on_not_logged_in to redirect to the login_controller/login
+#FIXME: automatically set on_not_logged_in to redirect to the login_controller/login
 #FIXME: Allow model to be something other than User
+#FIXME: Add routing
 #TODO: Before/after login callbacks?
 #TODO: enforce only one acts_as_login_controller
 #
@@ -21,12 +22,6 @@
 # = Object privs
 #TODO: Object privileges
 
-# This authentication system allows for an easy, plug and play solution
-# to all you authentication and privilege needs.
-#
-# 1. acts_as_login_controller, redirect_after_login, restrict_to
-# 2. acts_as_login_model
-# 3. migration
 module LWT
   module AuthenticationSystem
     module Controller
