@@ -37,6 +37,9 @@ GroupPrivilege.class_eval do
   belongs_to :privilege
 end
 
-require File.join( dir, 'lwt_authentication_system' )
-ActiveRecord::Base.extend LWT::AuthenticationSystem::Model::SingletonMethods
+require File.join( dir, 'model' )
+require File.join( dir, 'controller' )
+require File.join( dir, 'login_controller' )
+ActiveRecord::Base.send :include, LWT::AuthenticationSystem::Model
 ActionController::Base.send :include, LWT::AuthenticationSystem::Controller
+ActionController::Base.send :include, LWT::AuthenticationSystem::LoginController
