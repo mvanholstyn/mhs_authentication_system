@@ -1,19 +1,17 @@
 Overall
  ! Add Tests
  ! Add routing
+ ! Can there be different login controllers/models for different parts
+   of the site?
 
 Controller
- ! automatically set on_not_logged_in to redirect to the login_controller/login (not hardcoded user/login)
- ! Allow model to be something other than User
  * Update how restrict_to works so that it can be ignored in subcasses
  * Before/after login callbacks?
- * enforce only one acts_as_login_controller
 
 Model
  * validate user.group_id
  * Allow custom validation msg for group and priv validations
  * allow configuration of username, password_hash, and salt column names?
- * enforce only one acts_as_login_model
  * Revisit mixin for group/priv/group_priv
 
 Ideas
