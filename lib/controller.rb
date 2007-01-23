@@ -6,14 +6,16 @@ module LWT
         base.extend ClassMethods
         base.send :include, InstanceMethods
 
-        base.class_inheritable_accessor :permission_granted, :permission_denied, :not_logged_in
+        base.class_inheritable_accessor :permission_granted, :permission_denied, :not_logged_in, :login_model_name, :login_controller_name
         base.helper_method :current_user, :restrict_to
-        
+
         base.before_filter :set_current_user
-        
+
+        base.set_login_model :user
+        base.set_login_controller :users_controller
+
         base.on_not_logged_in do |c|
-          #TODO: Removed references to users controller
-          c.send :redirect_to, :controller => 'users', :action => 'login'
+          c.send :redirect_to, :controller => c.class.login_controller_name.gsub( /_controller$/, '' ), :action => 'login'
           false
         end
 
@@ -29,8 +31,7 @@ module LWT
           options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
 
           before_filter( options ) do |c|
-            #TODO: Remove references to user model
-            if !c.current_user.is_a? User
+            if !c.current_user.is_a? self.login_model
               c.session[:pre_login_url] = c.params
               c.class.not_logged_in.call( c )
             elsif c.current_user.has_privilege?( *privileges )
@@ -59,37 +60,42 @@ module LWT
         def on_permission_granted &blk
           self.permission_granted = blk
         end
+
+        def set_login_model model_name
+          self.login_model_name = model_name.to_s
+        end
+
+        def set_login_controller controller_name
+          self.login_controller_name = controller_name.to_s
+        end
+
+        def login_model
+          self.login_model_name.classify.constantize
+        end
       end
 
       module InstanceMethods
         def current_user
-          #TODO: Remove references to user model
-          User.current_user
+          self.class.login_model.current_user
         end
-        
+
         def restrict_to *privileges, &blk
-          #TODO: Remove references to user model
-          if current_user.is_a?( User ) and current_user.has_privilege?( *privileges )
+          if current_user.is_a?( self.class.login_model ) and current_user.has_privilege?( *privileges )
             blk.call
           end
         end
 
         def set_current_user user = nil
-          #TODO: Remove references to user model          
-          if user.is_a? User
+          if user.is_a? self.class.login_model
             session[:current_user_id] = user.id
-            #TODO: Remove references to user model
-            User.current_user = user
+            self.class.login_model.current_user = user
           elsif session[:current_user_id]
-            #TODO: Remove references to user model
-            User.current_user = User.find session[:current_user_id], :include => { :group => :privileges }
+            self.class.login_model.current_user = self.class.login_model.find session[:current_user_id], :include => { :group => :privileges }
           else
-            #TODO: Remove references to user model
-            User.current_user = nil
+            self.class.login_model.current_user = nil
           end
         end
       end
     end
-
   end
 end

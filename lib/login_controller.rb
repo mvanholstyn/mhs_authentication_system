@@ -22,22 +22,22 @@ module LWT
         def acts_as_login_controller( options = {} )
           include LWT::AuthenticationSystem::LoginController::InstanceMethods
           extend LWT::AuthenticationSystem::LoginController::SingletonMethods
-          
+
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
             :track_pre_login_url => true
           }.merge( options )
-          
-          redirect_after_logout do |controller| 
+
+          redirect_after_logout do |controller|
             { :action => 'login' }
-          end          
+          end
         end
       end
-      
+
       module SingletonMethods
         attr_accessor :lwt_authentication_system_options
-        
+
         # Sets the arguments to be passed to redirect_to after a user
         # successfully logs in. The block will be passed the controller
         # and the logged in user.
@@ -64,10 +64,9 @@ module LWT
         # - Else, the login template will be rendered.
         def login
           if request.post?
-            #TODO: Remove references to user model
-            @user = User.login params[:user]
-            if @user
-              self.set_current_user @user
+            instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.login( params[self.class.login_model_name.to_sym] ) )
+            if model
+              self.set_current_user model
               do_redirect_after_login
               return
             else
@@ -77,8 +76,7 @@ module LWT
             do_redirect_after_login
             return
           else
-            #TODO: Remove references to user model
-            @user = User.new
+            instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
             flash.now[:notice] = self.class.lwt_authentication_system_options[:login_flash]
           end
         end
@@ -86,8 +84,8 @@ module LWT
         # The logout action resets the session and rediects the user to
         # the page defined in redirect_after_logout.
         def logout
-          reset_session
-          self.set_current_user
+          session[:current_user_id] = nil
+          self.set_current_user nil
           redirect_to self.class.lwt_authentication_system_options[:redirect_after_logout].call( self )
         end
 
