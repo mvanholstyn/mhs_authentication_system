@@ -1,6 +1,3 @@
-Does restrict_to in controller/view work?
-Does the new file format cause any problems?
-
 # = Plugin
 #FIXME: Add Tests!
 #FIXME: Add routing
@@ -8,7 +5,6 @@ Does the new file format cause any problems?
 # = Controller
 #FIXME: automatically set on_not_logged_in to redirect to the login_controller/login (not hardcoded user/login)
 #FIXME: Allow model to be something other than User
-#FIXME: instance level restrict_to
 #TODO: Update how restrict_to works so that it can be ignored in subcasses
 #TODO: Before/after login callbacks?
 #TODO: enforce only one acts_as_login_controller
