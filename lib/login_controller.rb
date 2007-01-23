@@ -20,8 +20,8 @@ module LWT
         #   the page they initially requested rather then the page defined by the
         #   after_login_redirect. Defatut: true
         def acts_as_login_controller( options = {} )
-          include LWT::AuthenticationSystem::LoginController:InstanceMethods
-          extend LWT::AuthenticationSystem::LoginController:SingletonMethods
+          include LWT::AuthenticationSystem::LoginController::InstanceMethods
+          extend LWT::AuthenticationSystem::LoginController::SingletonMethods
           
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
