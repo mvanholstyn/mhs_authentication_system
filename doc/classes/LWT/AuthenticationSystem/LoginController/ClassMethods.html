@@ -80,8 +80,8 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000014">redirect_after_login</a>&nbsp;&nbsp;
-      <a href="#M000015">redirect_after_logout</a>&nbsp;&nbsp;
+      <a href="#M000015">redirect_after_login</a>&nbsp;&nbsp;
+      <a href="#M000016">redirect_after_logout</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -103,11 +103,11 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
 
         <div class="method-heading">
-          <a href="#M000014" class="method-signature">
+          <a href="#M000015" class="method-signature">
           <span class="method-name">redirect_after_login</span><span class="method-args">(&amp;blk)</span>
           </a>
         </div>
@@ -118,23 +118,23 @@ Sets the arguments to be passed to redirect_to after a user successfully
 logs in. The block will be passed the controller and the logged in user.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000014-source">
+            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000015-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 154</span>
-154:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_login</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-155:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_login</span>] = <span class="ruby-identifier">blk</span>
-156:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 150</span>
+150:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_login</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+151:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_login</span>] = <span class="ruby-identifier">blk</span>
+152:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
 
         <div class="method-heading">
-          <a href="#M000015" class="method-signature">
+          <a href="#M000016" class="method-signature">
           <span class="method-name">redirect_after_logout</span><span class="method-args">(&amp;blk)</span>
           </a>
         </div>
@@ -146,13 +146,13 @@ logs out. The block will be passed the controller. This defaults to the
 login action.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000015-source">
+            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000016-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 161</span>
-161:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_logout</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
-162:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_logout</span>] = <span class="ruby-identifier">blk</span>          
-163:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 157</span>
+157:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_after_logout</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>
+158:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:redirect_after_logout</span>] = <span class="ruby-identifier">blk</span>
+159:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

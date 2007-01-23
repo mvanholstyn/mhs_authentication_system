@@ -80,9 +80,9 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000004">has_privilege?</a>&nbsp;&nbsp;
-      <a href="#M000005">password=</a>&nbsp;&nbsp;
-      <a href="#M000006">password_confirmation=</a>&nbsp;&nbsp;
+      <a href="#M000005">has_privilege?</a>&nbsp;&nbsp;
+      <a href="#M000006">password=</a>&nbsp;&nbsp;
+      <a href="#M000007">password_confirmation=</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -122,11 +122,11 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000004" class="method-detail">
-        <a name="M000004"></a>
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
 
         <div class="method-heading">
-          <a href="#M000004" class="method-signature">
+          <a href="#M000005" class="method-signature">
           <span class="method-name">has_privilege?</span><span class="method-args">(*privs)</span>
           </a>
         </div>
@@ -137,51 +137,17 @@ This method determines if this user has any of the passed in privileges.
 The the arguments are expected to be symbols.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000004-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000004-source">
-<pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 289</span>
-289:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_privilege?</span> <span class="ruby-operator">*</span><span class="ruby-identifier">privs</span>
-290:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">group</span>
-291:           <span class="ruby-identifier">group</span>.<span class="ruby-identifier">privileges</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">priv</span><span class="ruby-operator">|</span>
-292:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">privs</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">priv</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
-293:           <span class="ruby-keyword kw">end</span>
-294:           <span class="ruby-keyword kw">false</span>
-295:         <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000005" class="method-detail">
-        <a name="M000005"></a>
-
-        <div class="method-heading">
-          <a href="#M000005" class="method-signature">
-          <span class="method-name">password=</span><span class="method-args">( pwd )</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Stores the password for validation, as well as sets the password_hash
-method for database.
-</p>
-          <p><a class="source-toggle" href="#"
             onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000005-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 298</span>
-298:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">password=</span>( <span class="ruby-identifier">pwd</span> )
-299:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pwd</span>.<span class="ruby-identifier">empty?</span>
-300:           <span class="ruby-ivar">@password_validation</span> <span class="ruby-operator">||=</span> {}
-301:           <span class="ruby-ivar">@password_validation</span>[<span class="ruby-identifier">:password</span>] = <span class="ruby-identifier">pwd</span>
-302:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">password_hash</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:use_salt</span>]
-303:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">pwd</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">salt</span> )
-304:           <span class="ruby-keyword kw">else</span>
-305:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">pwd</span> )
-306:           <span class="ruby-keyword kw">end</span>
-307:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 299</span>
+299:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_privilege?</span> <span class="ruby-operator">*</span><span class="ruby-identifier">privs</span>
+300:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">group</span>
+301:           <span class="ruby-identifier">group</span>.<span class="ruby-identifier">privileges</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">priv</span><span class="ruby-operator">|</span>
+302:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">privs</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">priv</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
+303:           <span class="ruby-keyword kw">end</span>
+304:           <span class="ruby-keyword kw">false</span>
+305:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -192,6 +158,40 @@ method for database.
 
         <div class="method-heading">
           <a href="#M000006" class="method-signature">
+          <span class="method-name">password=</span><span class="method-args">( pwd )</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Stores the password for validation, as well as sets the password_hash
+method for database.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000006-source">
+<pre>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 308</span>
+308:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">password=</span>( <span class="ruby-identifier">pwd</span> )
+309:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pwd</span>.<span class="ruby-identifier">empty?</span>
+310:           <span class="ruby-ivar">@password_validation</span> <span class="ruby-operator">||=</span> {}
+311:           <span class="ruby-ivar">@password_validation</span>[<span class="ruby-identifier">:password</span>] = <span class="ruby-identifier">pwd</span>
+312:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">password_hash</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:use_salt</span>]
+313:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">pwd</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">salt</span> )
+314:           <span class="ruby-keyword kw">else</span>
+315:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">lwt_authentication_system_options</span>[<span class="ruby-identifier">:hash_password</span>].<span class="ruby-identifier">call</span>( <span class="ruby-identifier">pwd</span> )
+316:           <span class="ruby-keyword kw">end</span>
+317:         <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <a href="#M000007" class="method-signature">
           <span class="method-name">password_confirmation=</span><span class="method-args">( pwd )</span>
           </a>
         </div>
@@ -201,15 +201,15 @@ method for database.
 Stores the confirmation password for validation.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000006-source">
+            onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000007-source">
 <pre>
-     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 310</span>
-310:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">password_confirmation=</span>( <span class="ruby-identifier">pwd</span> )
-311:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pwd</span>.<span class="ruby-identifier">empty?</span>
-312:           <span class="ruby-ivar">@password_validation</span> <span class="ruby-operator">||=</span> {}
-313:           <span class="ruby-ivar">@password_validation</span>[<span class="ruby-identifier">:password_confirmation</span>] = <span class="ruby-identifier">pwd</span>
-314:         <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File lwt_authentication_system.rb, line 320</span>
+320:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">password_confirmation=</span>( <span class="ruby-identifier">pwd</span> )
+321:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pwd</span>.<span class="ruby-identifier">empty?</span>
+322:           <span class="ruby-ivar">@password_validation</span> <span class="ruby-operator">||=</span> {}
+323:           <span class="ruby-ivar">@password_validation</span>[<span class="ruby-identifier">:password_confirmation</span>] = <span class="ruby-identifier">pwd</span>
+324:         <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
