@@ -1,23 +1,47 @@
-# = Plugin
-#FIXME: Add Tests!
-#FIXME: Add routing
-#
-# = Controller
-#FIXME: automatically set on_not_logged_in to redirect to the login_controller/login (not hardcoded user/login)
-#FIXME: Allow model to be something other than User
-#TODO: Update how restrict_to works so that it can be ignored in subcasses
-#TODO: Before/after login callbacks?
-#TODO: enforce only one acts_as_login_controller
-#
-# = Model
-#TODO: validate user.group_id
-#TODO: Allow custom validation msg for group and priv validations
-#TODO: allow configuration of username, password_hash, and salt column names?
-#TODO: enforce only one acts_as_login_model
-#TODO: Revisit mixin for group/priv/group_priv
-#
-# = Preferences
-#TODO: implement preferences
-#
-# = Object privs
-#TODO: Object privileges
+Overall
+ ! Add Tests
+ ! Add routing
+
+Controller
+ ! automatically set on_not_logged_in to redirect to the login_controller/login (not hardcoded user/login)
+ ! Allow model to be something other than User
+ * Update how restrict_to works so that it can be ignored in subcasses
+ * Before/after login callbacks?
+ * enforce only one acts_as_login_controller
+
+Model
+ * validate user.group_id
+ * Allow custom validation msg for group and priv validations
+ * allow configuration of username, password_hash, and salt column names?
+ * enforce only one acts_as_login_model
+ * Revisit mixin for group/priv/group_priv
+
+Ideas
+ * Preferences system
+ * Object level privileges
+ * Syntax for asking for permission a & b (not just or)
+ * Users can belong to many groups
+ * Signup/forgot password/activation system
+
+http://svn.techno-weenie.net/projects/plugins/restful_authentication/
+http://svn.techno-weenie.net/projects/plugins/acts_as_authenticated/
+http://www.mathewabonyi.com/articles/2006/07/29/authenticated-cookie-safe-fast
+
+http://svn.rails-engines.org/plugins/login_engine/
+http://svn.rails-engines.org/plugins/user_engine/
+
+http://agilewebdevelopment.com/plugins/scoped_access
+
+Others:
+  http://agilewebdevelopment.com/plugins/simple_access_control
+    uses "admin || manager" style syntax
+    adds has_permission? helper on view
+
+  http://opensvn.csie.org/ezra/rails/plugins/dev/acl_system2/
+    uses "admin || manager" style syntax
+    adds has_permission? helper on view
+    
+  http://activeacl.rubyforge.org/
+    has object level permissions
+    you can explicitely deny users privileges (not sure if i like this)
+    seems AWEFULLY complex for my tastes
