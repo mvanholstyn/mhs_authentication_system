@@ -24,11 +24,9 @@
 # This authentication system allows for an easy, plug and play solution
 # to all you authentication and privilege needs.
 #
-# Here is the basic usage:
-#
 # 1. acts_as_login_controller, redirect_after_login, restrict_to
 # 2. acts_as_login_model
-# 3. database
+# 3. migration
 module LWT
   module AuthenticationSystem
     module Controller

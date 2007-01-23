@@ -3,6 +3,6 @@ class UsersController < ApplicationController
 
   redirect_after_login do |controller, user|
     raise "You need to add a after_login redirect"
-    #{ :controller => "example" }
+    { :controller => "example" }
   end
 end
