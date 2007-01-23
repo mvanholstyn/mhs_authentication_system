@@ -22,7 +22,7 @@ module LWT
           include LWT::AuthenticationSystem::Model::InstanceMethods
           extend LWT::AuthenticationSystem::Model::SingletonMethods
           
-          lwt_authentication_system_options = {
+          self.lwt_authentication_system_options = {
             :password_validation_message => "Passwords must match",
             :username_validation_message => "Username cannot be blank",
             :username_unique_validation_message => "Username has already been taken",

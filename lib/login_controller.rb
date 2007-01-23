@@ -23,7 +23,7 @@ module LWT
           include LWT::AuthenticationSystem::LoginController:InstanceMethods
           extend LWT::AuthenticationSystem::LoginController:SingletonMethods
           
-          lwt_authentication_system_options = {
+          self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
             :track_pre_login_url => true
