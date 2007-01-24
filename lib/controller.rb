@@ -44,19 +44,22 @@ module LWT
 
         # Callback used when no user is logged in. The return value will
         # be the return value for the before_filter. This defaults to redirecting
-        # to the 'users/login' action.
+        # to the 'users/login' action. The block will be evaluated in the scope
+        # of the controller.
         def on_not_logged_in &blk
           self.not_logged_in = blk
         end
 
         # Callback used when a user is denied access to a page. The return value will
-        # be the return value for the before_filter.
+        # be the return value for the before_filter. The block will be evaluated in the scope
+        # of the controller.
         def on_permission_denied &blk
           self.permission_denied = blk
         end
 
         # Callback used when a user is granted access to a page. The return value will
-        # be the return value for the before_filter.
+        # be the return value for the before_filter. The block will be evaluated in the scope
+        # of the controlle.
         def on_permission_granted &blk
           self.permission_granted = blk
         end

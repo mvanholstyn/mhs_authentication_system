@@ -39,15 +39,15 @@ module LWT
         attr_accessor :lwt_authentication_system_options
 
         # Sets the arguments to be passed to redirect_to after a user
-        # successfully logs in. The block will be passed the controller
-        # and the logged in user.
+        # successfully logs in. The block will be evaluated in the scope
+        # of the controller.
         def redirect_after_login &blk
           self.lwt_authentication_system_options[:redirect_after_login] = blk
         end
 
         # Sets the arguments to be passed to redirect_to after a user
-        # successfully logs out. The block will be passed the controller.
-        # This defaults to the login action.
+        # successfully logs out. The block will be evaluated in the scope
+        # of the controller.
         def redirect_after_logout &blk
           self.lwt_authentication_system_options[:redirect_after_logout] = blk
         end
