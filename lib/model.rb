@@ -1,7 +1,7 @@
 module LWT
   module AuthenticationSystem
     module Model
-      
+
       def self.included( base )
         base.extend ClassMethods
       end
@@ -21,23 +21,23 @@ module LWT
         def acts_as_login_model options = {}
           include LWT::AuthenticationSystem::Model::InstanceMethods
           extend LWT::AuthenticationSystem::Model::SingletonMethods
-          
+
           self.lwt_authentication_system_options = {
             :password_validation_message => "Passwords must match",
             :username_validation_message => "Username cannot be blank",
             :username_unique_validation_message => "Username has already been taken",
             :use_salt => false
           }.merge( options )
-          
-          hash_password do |pwd|
+
+          hash_password do |password, salt|
             require 'md5'
-            MD5.hexdigest( pwd )
+            MD5.hexdigest( password )
           end
-          
+
           validate_password do |user, password|
             true
           end
-          
+
           belongs_to :group
           validates_presence_of :username,
                     :message => lwt_authentication_system_options[:username_validation_message]

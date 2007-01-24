@@ -14,8 +14,8 @@ module LWT
         base.set_login_model :user
         base.set_login_controller :users_controller
 
-        base.on_not_logged_in do |c|
-          c.send :redirect_to, :controller => c.class.login_controller_name.gsub( /_controller$/, '' ), :action => 'login'
+        base.on_not_logged_in do
+          redirect_to :controller => self.class.login_controller_name.gsub( /_controller$/, '' ), :action => 'login'
           false
         end
 
@@ -33,11 +33,11 @@ module LWT
           before_filter( options ) do |c|
             if !c.current_user.is_a? self.login_model
               c.session[:pre_login_url] = c.params
-              c.class.not_logged_in.call( c )
+              c.instance_eval &c.class.not_logged_in
             elsif c.current_user.has_privilege?( *privileges )
-              c.class.permission_granted.call( c, c.current_user )
+              c.instance_eval &c.class.permission_granted
             else
-              c.class.permission_denied.call( c, c.current_user )
+              c.instance_eval &c.class.permission_denied
             end
           end
         end

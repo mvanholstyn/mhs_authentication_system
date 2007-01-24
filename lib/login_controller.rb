@@ -29,7 +29,7 @@ module LWT
             :track_pre_login_url => true
           }.merge( options )
 
-          redirect_after_logout do |controller|
+          redirect_after_logout do
             { :action => 'login' }
           end
         end
@@ -86,7 +86,7 @@ module LWT
         def logout
           session[:current_user_id] = nil
           self.set_current_user nil
-          redirect_to self.class.lwt_authentication_system_options[:redirect_after_logout].call( self )
+          redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_logout] )
         end
 
       private
@@ -95,7 +95,7 @@ module LWT
             redirect_to session[:pre_login_url]
             session[:pre_login_url] = nil
           else
-            redirect_to self.class.lwt_authentication_system_options[:redirect_after_login].call( self, current_user )
+            redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_login] )
           end
         end
       end
