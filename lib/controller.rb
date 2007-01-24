@@ -19,8 +19,13 @@ module LWT
           false
         end
 
-        base.on_permission_denied { |c,u| false }
-        base.on_permission_granted { |c,u| true }
+        base.on_permission_denied do
+          false
+        end
+        
+        base.on_permission_granted do
+          true
+        end
       end
 
       module ClassMethods
