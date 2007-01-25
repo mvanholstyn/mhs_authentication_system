@@ -113,7 +113,7 @@ module LWT
           @password_validation[:password_confirmation] = pwd
         end
 
-      private
+#      private
         # Checks to ensure that if the password was changed, the password and password_confirmation are the same.
         def validate_password
           pass = true
