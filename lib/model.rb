@@ -39,9 +39,13 @@ module LWT
                     :message => lwt_authentication_system_options[:username_validation_message]
           validates_uniqueness_of :username,
                     :message => lwt_authentication_system_options[:username_unique_validation_message]
-          validates_confirmation_of :password,
-                    :message => lwt_authentication_system_options[:password_validation_message]
-          
+
+          validate do |user|
+            if ( user.password or user.password_confirmation ) and user.password != user.password_confirmation
+              user.errors.add( :password, self.lwt_authentication_system_options[:password_validation_message] )
+            end
+          end
+
           after_validation do |user|
             if user.password and user.errors.on( :password ).nil?
               args = [ user.password ]
@@ -83,7 +87,15 @@ module LWT
       end
 
       module InstanceMethods
-        attr_accessor :password, :password_confirmation
+        attr_reader :password, :password_confirmation
+
+        def password=( password )
+          @password = password.blank? ? nil : password
+        end
+
+        def password_confirmation=( password )
+          @password_confirmation = password.blank? ? nil : password
+        end
 
         # This method determines if this user has any of the passed in privileges.
         # The the arguments are expected to be symbols.
