@@ -1,11 +1,14 @@
 Overall
  ! Add Tests
  ! Add routing
- ! Can there be different login controllers/models for different parts
+ ! Add default on permission denied error msg
+ ! update generated login form to include flash error and flash notice
+
+ ? Can there be different login controllers/models for different parts
    of the site?
 
 Controller
- * Update how restrict_to works so that it can be ignored in subcasses
+ * Update how restrict_to works so that it can be ignored in subclasses
  * Before/after login callbacks?
 
 Model
@@ -42,4 +45,4 @@ Others:
   http://activeacl.rubyforge.org/
     has object level permissions
     you can explicitely deny users privileges (not sure if i like this)
-    seems AWEFULLY complex for my tastes
+    seems very complex, and the API does not seem very easy
