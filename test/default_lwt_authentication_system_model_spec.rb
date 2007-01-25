@@ -37,11 +37,7 @@ context "A default LWT::AuthenticationSystem model" do
   specify "should respond to instance.password=" do
     LwtAuthenticationSystemUser.new.should.respond_to :password=
   end
-
-  specify "should respond to instance.password_confirmation=" do
-    LwtAuthenticationSystemUser.new.should.respond_to :password=
-  end
-
+  
   specify "should respond to instance.password_confirmation=" do
     LwtAuthenticationSystemUser.new.should.respond_to :password_confirmation=
   end

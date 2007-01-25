@@ -39,10 +39,6 @@ context "A default ActiveRecord model" do
   end
 
   specify "should not respond to instance.password_confirmation=" do
-    NormalUser.new.should.not.respond_to :password=
-  end
-
-  specify "should not respond to instance.password_confirmation=" do
     NormalUser.new.should.not.respond_to :password_confirmation=
   end
 
