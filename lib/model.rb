@@ -34,16 +34,15 @@ module LWT
             MD5.hexdigest( password )
           end
 
-          validate_password do |user, password|
-            true
-          end
-
           belongs_to :group
           validates_presence_of :username,
                     :message => lwt_authentication_system_options[:username_validation_message]
           validates_uniqueness_of :username,
                     :message => lwt_authentication_system_options[:username_unique_validation_message]
-          validate :validate_password
+          validates_confirmation_of :password,
+                    :message => lwt_authentication_system_options[:password_validation_message]
+          
+          after_validation :hash_password
         end
       end
 
@@ -73,16 +72,10 @@ module LWT
             self.lwt_authentication_system_options[:hash_password].call *args
           end
         end
-
-        # Takes a block to be used when validating the password. The block
-        # will be passed one parameter, the password.
-        def validate_password( &blk )
-          self.lwt_authentication_system_options[:validate_password] = blk
-        end
       end
 
       module InstanceMethods
-        attr_reader :password, :password_confirmation
+        attr_accessor :password, :password_confirmation
 
         # This method determines if this user has any of the passed in privileges.
         # The the arguments are expected to be symbols.
@@ -93,38 +86,15 @@ module LWT
           end
           false
         end
-
-        # Stores the password for validation, as well as sets the password_hash method for database.
-        def password=( pwd )
-          return if pwd.empty?
-          @password_validation ||= {}
-          @password_validation[:password] = pwd
-          self.password_hash = if self.class.lwt_authentication_system_options[:use_salt]
-            self.class.lwt_authentication_system_options[:hash_password].call( pwd, user.salt )
-          else
-            self.class.lwt_authentication_system_options[:hash_password].call( pwd )
+        
+        def hash_password
+          if password and errors.on( :password ).nil?
+            args = [ self.password ]
+            args << salt if self.class.lwt_authentication_system_options[:use_salt]
+            self.password_hash = self.class.hash_password( *args )
           end
-        end
-
-        # Stores the confirmation password for validation.
-        def password_confirmation=( pwd )
-          return if pwd.empty?
-          @password_validation ||= {}
-          @password_validation[:password_confirmation] = pwd
-        end
-
-#      private
-        # Checks to ensure that if the password was changed, the password and password_confirmation are the same.
-        def validate_password
-          pass = true
-          if @password_validation
-            pass = self.class.lwt_authentication_system_options[:validate_password].call( self, @password_validation[:password] )
-            if @password_validation[:password] != @password_validation[:password_confirmation]
-              errors.add :password, self.class.lwt_authentication_system_options[:password_validation_message]
-              pass = false
-            end
-          end
-          pass
+          self.password = self.password_confirmation = nil
+          true
         end
       end
     end
