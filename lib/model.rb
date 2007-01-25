@@ -52,9 +52,13 @@ module LWT
                     :message => lwt_authentication_system_options[:username_unique_validation_message]
 
           validate do |user|
+            pass = true
             if ( user.password or user.password_confirmation ) and user.password != user.password_confirmation
               user.errors.add( :password, self.lwt_authentication_system_options[:password_validation_message] )
+              pass = false              
             end
+            
+            pass
           end
 
           after_validation do |user|
