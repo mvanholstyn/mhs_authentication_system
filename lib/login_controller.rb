@@ -2,12 +2,15 @@ module LWT
   module AuthenticationSystem
     module LoginController
 
-      def self.included base
+      def self.included base #:nodoc:
         base.extend ClassMethods
       end
 
+      # These methods are added to ActionController::Base      
       module ClassMethods
-        # Includes the login and logout actions into this controller.
+        # Sets up this controller as a login controller. The following thigs are done:
+        # * Adds methods from LWT::AuthenticationSystem::LoginController::InstanceMethods
+        # * Adds methods from LWT::AuthenticationSystem::LoginController::SingletonMethods        
         #
         # Valid options:
         # - :login_flash - This is the message stored in flash[:notice] when

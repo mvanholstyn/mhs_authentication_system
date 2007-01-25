@@ -3,6 +3,7 @@ Overall
  ! Add routing
  ! Add default on permission denied error msg
  ! update generated login form to include flash error and flash notice
+ ! Do I want my own validate_password method?
 
  ? Can there be different login controllers/models for different parts
    of the site?

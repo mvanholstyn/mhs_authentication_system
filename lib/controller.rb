@@ -2,7 +2,7 @@ module LWT
   module AuthenticationSystem
     module Controller
 
-      def self.included base
+      def self.included base #:nodoc:
         base.extend ClassMethods
         base.send :include, InstanceMethods
 
@@ -28,6 +28,7 @@ module LWT
         end
       end
 
+      # These methods are added to ActionController::Base
       module ClassMethods
         # This is used to restrict access to action based on privileges of the current user.
         # This method takes a list of privileges which should be allowes, as well as the options
@@ -81,7 +82,8 @@ module LWT
           self.login_model_name.classify.constantize
         end
       end
-
+      
+      # These methods are added to ActionController::Base
       module InstanceMethods
         def current_user
           self.class.login_model.current_user

@@ -2,12 +2,23 @@ module LWT
   module AuthenticationSystem
     module Model
 
-      def self.included( base )
+      def self.included base #:nodoc:
         base.extend ClassMethods
       end
 
+      # These methods are added to ActiveRecord::Base
       module ClassMethods
-        # Setups this model as the one which is use for authentication
+        # Sets up this model as a login model. The following thigs are done:
+        # * belongs_to :group
+        # * validates_presence_of :username
+        # * validates_uniqueness_of :username
+        # * sets up validation to check that password and password_confirmation 
+        #   match if either are set (to something that is not blank)
+        # * sets up after_validation callbacks to clear password and password_confirmation.
+        #   If there were no errors on password, they password_hash will be set to the hash
+        #   value of password
+        # * Adds methods from LWT::AuthenticationSystem::Model::InstanceMethods
+        # * Adds methods from LWT::AuthenticationSystem::Model::SingletonMethods        
         #
         # Valid options:
         # - :password_validation_message - Error message used when the passwords do not match.
@@ -89,10 +100,16 @@ module LWT
       module InstanceMethods
         attr_reader :password, :password_confirmation
 
+        # Sets the users password. This will be itnored if the value is blank.
+        # This value is cleared out in an after_validate callback. If there
+        # were not errors on the password attribute, then password_hash will be
+        # set to the hash of this password.
         def password=( password )
           @password = password.blank? ? nil : password
         end
 
+        # Sets the users password_confirmation. This will be itnored if the value is blank
+        # This value is cleared out in an after_validate callback.
         def password_confirmation=( password )
           @password_confirmation = password.blank? ? nil : password
         end
