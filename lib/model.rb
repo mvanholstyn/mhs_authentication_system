@@ -42,7 +42,15 @@ module LWT
           validates_confirmation_of :password,
                     :message => lwt_authentication_system_options[:password_validation_message]
           
-          after_validation :hash_password
+          after_validation do |user|
+            if user.password and user.errors.on( :password ).nil?
+              args = [ user.password ]
+              args << user.salt if self.lwt_authentication_system_options[:use_salt]
+              user.password_hash = self.hash_password( *args )
+            end
+            user.password = user.password_confirmation = nil
+            true
+          end
         end
       end
 
@@ -85,16 +93,6 @@ module LWT
             return true if privs.include? priv.name.to_sym
           end
           false
-        end
-        
-        def hash_password
-          if password and errors.on( :password ).nil?
-            args = [ self.password ]
-            args << salt if self.class.lwt_authentication_system_options[:use_salt]
-            self.password_hash = self.class.hash_password( *args )
-          end
-          self.password = self.password_confirmation = nil
-          true
         end
       end
     end

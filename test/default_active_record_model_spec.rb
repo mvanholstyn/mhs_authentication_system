@@ -57,9 +57,5 @@ context "A default ActiveRecord model" do
   specify "should not respond to instance.password_hash" do
     NormalUser.new.should.not.respond_to :password_hash
   end
-
-  specify "should not respond to instance.hash_password" do
-    NormalUser.new.should.not.respond_to :hash_password
-  end
   
 end

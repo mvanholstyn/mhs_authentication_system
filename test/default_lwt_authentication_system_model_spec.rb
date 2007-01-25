@@ -57,10 +57,6 @@ context "A default LWT::AuthenticationSystem model" do
   specify "should respond to instance.password_hash" do
     LwtAuthenticationSystemUser.new.should.respond_to :password_hash
   end
-
-  specify "should respond to instance.hash_password" do
-    LwtAuthenticationSystemUser.new.should.respond_to :hash_password
-  end
   
   specify "should validate presence of username" do
     user = LwtAuthenticationSystemUser.new
