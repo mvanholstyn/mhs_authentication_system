@@ -25,6 +25,8 @@ Ideas
  * Users can belong to many groups
  * Signup/forgot password/activation system
 
+
+http://www.writertopia.com/developers/authorization
 http://svn.techno-weenie.net/projects/plugins/restful_authentication/
 http://svn.techno-weenie.net/projects/plugins/acts_as_authenticated/
 http://www.mathewabonyi.com/articles/2006/07/29/authenticated-cookie-safe-fast
