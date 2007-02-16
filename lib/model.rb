@@ -12,21 +12,24 @@ module LWT
         # * belongs_to :group
         # * validates_presence_of :username
         # * validates_uniqueness_of :username
-        # * sets up validation to check that password and password_confirmation 
+        # * sets up validation to check that password and password_confirmation
         #   match if either are set (to something that is not blank)
         # * sets up after_validation callbacks to clear password and password_confirmation.
         #   If there were no errors on password, they password_hash will be set to the hash
         #   value of password
         # * Adds methods from LWT::AuthenticationSystem::Model::InstanceMethods
-        # * Adds methods from LWT::AuthenticationSystem::Model::SingletonMethods        
+        # * Adds methods from LWT::AuthenticationSystem::Model::SingletonMethods
         #
         # Valid options:
-        # - :password_validation_message - Error message used when the passwords do not match.
+        # - :password_validation - Error message used when the passwords do not match.
+        #   If this check is not desired, set this to false or nil.
         #   Default: "Passwords must match"
-        # - :username_validation_message - Error message used when the username is blank.
+        # - :username_validation - Error message used when the username is blank.
+        #   If this check is not desired, set this to false or nil.
         #   Default: "Username cannot be blank"
-        # - :username_unique_validation_message - Error message used when the username is
-        #   already in use. Default: "Username has already been taken"
+        # - :username_unique_validation - Error message used when the username is
+        #   already in use. If this check is not desired, set to false or nil.
+        #   Default: "Username has already been taken"
         # - :use_salt - If true, the hash_password method will be sent a salt along with a
         #   password. The salt will be stored in database column salt. Defaults: false
         def acts_as_login_model options = {}
@@ -34,9 +37,9 @@ module LWT
           extend LWT::AuthenticationSystem::Model::SingletonMethods
 
           self.lwt_authentication_system_options = {
-            :password_validation_message => "Passwords must match",
-            :username_validation_message => "Username cannot be blank",
-            :username_unique_validation_message => "Username has already been taken",
+            :password_validation => "Passwords must match",
+            :username_validation => "Username cannot be blank",
+            :username_unique_validation => "Username has already been taken",
             :use_salt => false
           }.merge( options )
 
@@ -46,19 +49,24 @@ module LWT
           end
 
           belongs_to :group
-          validates_presence_of :username,
-                    :message => lwt_authentication_system_options[:username_validation_message]
-          validates_uniqueness_of :username,
-                    :message => lwt_authentication_system_options[:username_unique_validation_message]
 
-          validate do |user|
-            pass = true
-            if ( user.password or user.password_confirmation ) and user.password != user.password_confirmation
-              user.errors.add( :password, self.lwt_authentication_system_options[:password_validation_message] )
-              pass = false              
+          if msg = lwt_authentication_system_options[:username_validation]
+            validates_presence_of :username, :message => msg
+          end
+
+          if msg = lwt_authentication_system_options[:username_unique_validation]
+            validates_uniqueness_of :username, :message => msg
+          end
+
+          if msg = self.lwt_authentication_system_options[:password_validation]
+            validate do |user|
+              if ( user.password or user.password_confirmation ) and user.password != user.password_confirmation
+                user.errors.add( :password, msg )
+                false
+              else
+                true
+              end
             end
-            
-            pass
           end
 
           after_validation do |user|
