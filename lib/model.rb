@@ -117,7 +117,7 @@ module LWT
       module InstanceMethods
         attr_reader :password, :password_confirmation
 
-        # Sets the users password. This will be itnored if the value is blank.
+        # Sets the users password. This will be ignored if the value is blank.
         # This value is cleared out in an after_validate callback. If there
         # were not errors on the password attribute, then password_hash will be
         # set to the hash of this password.

@@ -20,4 +20,8 @@ class LwtAuthenticationSystemUser < ActiveRecord::Base
   acts_as_login_model
 end
 
+class NonValidatingLwtAuthenticationSystemUser < ActiveRecord::Base
+  acts_as_login_model :group_validation => false, :password_validation => false, :username_validation => false, :username_unique_validation => false
+end
+
 
