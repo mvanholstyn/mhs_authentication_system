@@ -20,6 +20,7 @@ module LWT
         end
 
         base.on_permission_denied do
+          render :text => "You do not have the proper privileges to access this page."
           false
         end
         

@@ -1,29 +1,22 @@
 Overall
  ! Add Tests
- ! Add routing
- ! Add default on permission denied error msg
- ! update generated login form to include flash error and flash notice
- ! Do I want my own validate_password method?
-
- ? Can there be different login controllers/models for different parts
-   of the site?
+ ! Add routes
+ ? Can there be different login controllers/models for different parts of the site?
 
 Controller
- * Update how restrict_to works so that it can be ignored in subclasses
- * Before/after login callbacks?
+ ? Update how restrict_to works so that it can be ignored in subclasses
 
 Model
- * validate user.group_id
- * Allow custom validation msg for group and priv validations
- * allow configuration of username, password_hash, and salt column names?
- * Revisit mixin for group/priv/group_priv
+ ? Allow custom validation msg for group and priv validations
+ ? allow configuration of username, password_hash, and salt column names
+ ? Revisit mixin for group/priv/group_priv
 
 Ideas
- * Preferences system
  * Object level privileges
  * Syntax for asking for permission a & b (not just or)
  * Users can belong to many groups
  * Signup/forgot password/activation system
+ * Preferences system
 
 
 http://www.writertopia.com/developers/authorization

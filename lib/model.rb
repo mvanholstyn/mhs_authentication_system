@@ -37,6 +37,7 @@ module LWT
           extend LWT::AuthenticationSystem::Model::SingletonMethods
 
           self.lwt_authentication_system_options = {
+            :group_validation => "Group cannot be blank",
             :password_validation => "Passwords must match",
             :username_validation => "Username cannot be blank",
             :username_unique_validation => "Username has already been taken",
@@ -49,6 +50,10 @@ module LWT
           end
 
           belongs_to :group
+
+          if msg = lwt_authentication_system_options[:group_validation]
+            validates_presence_of :group_id, :message => msg
+          end
 
           if msg = lwt_authentication_system_options[:username_validation]
             validates_presence_of :username, :message => msg
@@ -68,7 +73,7 @@ module LWT
               end
             end
           end
-
+          
           after_validation do |user|
             if user.password and user.errors.on( :password ).nil?
               args = [ user.password ]

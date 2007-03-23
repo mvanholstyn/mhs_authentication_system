@@ -54,8 +54,19 @@ context "A default LWT::AuthenticationSystem model" do
     LwtAuthenticationSystemUser.new.should.respond_to :password_hash
   end
   
+  specify "should validate presence of group_id" do
+    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn'
+    user.should.not.be.valid
+    user.errors.on( :group_id ).should.not.be.nil
+    user.errors.on( :group_id ).should == "Group cannot be blank"
+    
+    user.group_id = 1
+    user.should.be.valid
+    user.errors.on( :group_id ).should.be.nil
+  end
+  
   specify "should validate presence of username" do
-    user = LwtAuthenticationSystemUser.new
+    user = LwtAuthenticationSystemUser.new :group_id => 1
     user.should.not.be.valid
     user.errors.on( :username ).should.not.be.nil
     user.errors.on( :username ).should == "Username cannot be blank"
@@ -66,8 +77,8 @@ context "A default LWT::AuthenticationSystem model" do
   end
   
   specify "should validate uniqueness of username" do
-    mvanholstyn = LwtAuthenticationSystemUser.create! :username => 'mvanholstyn'
-    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn'
+    mvanholstyn = LwtAuthenticationSystemUser.create! :username => 'mvanholstyn', :group_id => 1
+    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn', :group_id => 1
 
     user.should.not.be.valid
     user.errors.on( :username ).should.not.be.nil
@@ -82,7 +93,7 @@ context "A default LWT::AuthenticationSystem model" do
   end
 
   specify "should validate password and password confirmation match only if one of them is given" do
-    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn'
+    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn', :group_id => 1
 
     user.should.be.valid
     
@@ -105,7 +116,7 @@ context "A default LWT::AuthenticationSystem model" do
   end
   
   specify "should clean password and password_confirmation after validations" do
-    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn'
+    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn', :group_id => 1
 
     user.should.be.valid
     
@@ -129,7 +140,7 @@ context "A default LWT::AuthenticationSystem model" do
   end
 
   specify "should set password_hash after validations, if they are successful" do
-    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn'
+    user = LwtAuthenticationSystemUser.new :username => 'mvanholstyn', :group_id => 1
 
     user.should.be.valid
     
