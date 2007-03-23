@@ -1,5 +1,5 @@
 admin:
   id: 1
   username: admin
-  password: <%%= User.hash_password 'password' %>
+  password_hash: <%%= User.hash_password 'password' %>
   group_id: 1
