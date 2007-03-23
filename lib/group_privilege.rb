@@ -1,4 +1,4 @@
-unless( GroupPrivilege rescue nil )
+if not defined? GroupPrivilege
   class ::GroupPrivilege < ActiveRecord::Base
   end
 end

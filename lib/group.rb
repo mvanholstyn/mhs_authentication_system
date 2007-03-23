@@ -1,4 +1,4 @@
-unless( Group rescue nil )
+if not defined? Group
   class ::Group < ActiveRecord::Base
   end
 end

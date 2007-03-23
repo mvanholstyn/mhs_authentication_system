@@ -1,4 +1,4 @@
-unless( Privilege rescue nil )
+if not defined? Privilege
   class ::Privilege < ActiveRecord::Base
   end
 end
