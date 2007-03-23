@@ -18,6 +18,11 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.column :password_hash, :string
       t.column :group_id, :integer
     end
+    
+    privilege = Privilege.create! :name => 'admin'
+    group = Group.create! :name => 'admin'
+    group_privilege = GroupPrivilege.create! :group_id => group.id, :privilege_id => privilege.id
+    user = User.create! :username => 'admin', :password => 'password', :password_confirmation => 'password', :group_id => group.id
   end
 
   def self.down
