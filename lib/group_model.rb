@@ -1,4 +1,4 @@
-if not defined? Group
+if( Group rescue true )
   class ::Group < ActiveRecord::Base
   end
 end

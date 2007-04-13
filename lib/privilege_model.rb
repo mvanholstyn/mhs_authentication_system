@@ -1,4 +1,4 @@
-if not defined? Privilege
+if( Privilege rescue true )
   class ::Privilege < ActiveRecord::Base
   end
 end

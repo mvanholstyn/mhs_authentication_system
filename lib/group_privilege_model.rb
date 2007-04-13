@@ -1,4 +1,4 @@
-if not defined? GroupPrivilege
+if( GroupPrivilege rescue true )
   class ::GroupPrivilege < ActiveRecord::Base
   end
 end
