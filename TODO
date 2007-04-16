@@ -9,27 +9,28 @@ Controller
 Model
  ? Allow custom validation msg for group and priv validations
  ? allow configuration of username, password_hash, and salt column names
- ? Revisit mixin for group/priv/group_priv
+ ! Revisit mixin for group/priv/group_priv
 
 Ideas
  * Object level privileges
- * Syntax for asking for permission a & b (not just or)
- * Users can belong to many groups
  * Signup/forgot password/activation system
  * Preferences system
+ ? Syntax for asking for permission a & b (not just or)
+ ? Users can belong to many groups
+ ? Add "Remember Me" functionality
 
 
-http://www.writertopia.com/developers/authorization
-http://svn.techno-weenie.net/projects/plugins/restful_authentication/
-http://svn.techno-weenie.net/projects/plugins/acts_as_authenticated/
-http://www.mathewabonyi.com/articles/2006/07/29/authenticated-cookie-safe-fast
+Object level privileges
+	http://agilewebdevelopment.com/plugins/scoped_access
 
-http://svn.rails-engines.org/plugins/login_engine/
-http://svn.rails-engines.org/plugins/user_engine/
+Remember Me/Signup/Forgot Password/Activation 
+	http://svn.techno-weenie.net/projects/plugins/restful_authentication/
+	http://svn.techno-weenie.net/projects/plugins/acts_as_authenticated/
+	http://www.mathewabonyi.com/articles/2006/07/29/authenticated-cookie-safe-fast
+	http://svn.rails-engines.org/plugins/login_engine/
+	http://svn.rails-engines.org/plugins/user_engine/
 
-http://agilewebdevelopment.com/plugins/scoped_access
-
-Others:
+Privilege Syntax
   http://agilewebdevelopment.com/plugins/simple_access_control
     uses "admin || manager" style syntax
     adds has_permission? helper on view
@@ -37,8 +38,13 @@ Others:
   http://opensvn.csie.org/ezra/rails/plugins/dev/acl_system2/
     uses "admin || manager" style syntax
     adds has_permission? helper on view
-    
+
+Privilege
   http://activeacl.rubyforge.org/
     has object level permissions
     you can explicitely deny users privileges (not sure if i like this)
     seems very complex, and the API does not seem very easy
+
+	https://activerbac.turingstudio.com/
+	
+	http://www.writertopia.com/developers/authorization
