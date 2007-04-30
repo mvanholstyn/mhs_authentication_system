@@ -1,9 +1,9 @@
-if( ForgotPassword rescue true )
-  class ::ForgotPassword < ActiveRecord::Base
+if( UserReminder rescue true )
+  class ::UserReminder < ActiveRecord::Base
   end
 end
 
-ForgotPassword.class_eval do
+UserReminder.class_eval do
   belongs_to :user
 
   def self.create_for_user user, expires_at = Time.now + 2.hours

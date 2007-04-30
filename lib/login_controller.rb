@@ -29,7 +29,11 @@ module LWT
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
-            :forgot_password_flash => "Please enter your email address",
+            :reminder_flash => "Please enter the email address of the account whose information you would like to retrieve",
+            :reminder_error_flash => "The email address you entered was not found",
+            :reminder_success_flash => "Please check your email to retrieve your account information",
+            :forgot_password_flash => "Update your password",
+            :forgot_password_success_flash => "Your password has been successfully updated",
             :track_pre_login_url => true
           }.merge( options )
 
@@ -93,21 +97,21 @@ module LWT
           redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_logout] )
         end
 
-        def forgot_password
+        def reminder
           if request.post?
             email_address = params[:user][:email_address]
             if email_address.blank? || ( user = self.class.login_model.find_by_email_address( email_address ) ).nil?
-              flash.now[:error] = "Please enter a valid email address."
+              flash.now[:error] = self.class.lwt_authentication_system_options[:reminder_error_flash]
             else
-              forgot_password = ForgotPassword.create_for_user( user )
-              url = url_for(:action => 'change_password', :id => user.id, :token => forgot_password.token)
-              ForgotPasswordMailer.deliver_forgot_password(user, forgot_password, url)
-              flash[:notice] = "Please check your email for instructions on resetting your password."
+              reminder = UserReminder.create_for_user( user )
+              url = url_for(:action => 'change_password', :id => user.id, :token => reminder.token)
+              UserReminderMailer.deliver_reminder(user, reminder, url)
+              flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
               redirect_to :action => "login"
             end
           else
             instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
-            flash.now[:notice] = self.class.lwt_authentication_system_options[:forgot_password_flash]
+            flash.now[:notice] = self.class.lwt_authentication_system_options[:reminder_flash]
           end
         end
         
@@ -122,9 +126,12 @@ module LWT
           if request.post?  
             if @user.update_attributes( params[:user] )
               forgot_password.destroy
-              flash[:notice] = "Your password has been updated."
-              redirect_to :action => "login"
+              flash[:notice] = self.class.lwt_authentication_system_options[:change_password_success_flash]
+              self.set_current_user @user
+              do_redirect_after_login
             end
+          else
+            flash[:notice] = self.class.lwt_authentication_system_options[:change_password_flash]
           end
         end
 
