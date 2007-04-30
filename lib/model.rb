@@ -75,7 +75,8 @@ module LWT
 
           if msg = self.lwt_authentication_system_options[:password_validation]
             validate do |user|
-              if ( user.password or user.password_confirmation ) and user.password != user.password_confirmation
+              if ( user.instance_variable_get( "@password" ) or user.instance_variable_get( "@password_confirmation" ) ) && 
+                 user.instance_variable_get( "@password" ) != user.instance_variable_get( "@password_confirmation" )
                 user.errors.add( :password, msg )
                 false
               else
@@ -84,15 +85,14 @@ module LWT
             end
           end
           
-          after_validation do |user|
-            if user.password and user.errors.on( :password ).nil?
-              args = [ user.password ]
+          before_save do |user|
+            if user.instance_variable_get( "@password" )
+              args = [ user.instance_variable_get( "@password" ) ]
               args << user.salt if self.lwt_authentication_system_options[:use_salt]
               user.password_hash = self.hash_password( *args )
             end
-            user.password = user.password_confirmation = nil
-            true
           end
+          
         end
       end
 
@@ -125,8 +125,6 @@ module LWT
       end
 
       module InstanceMethods
-        attr_reader :password, :password_confirmation
-
         # Sets the users password. This will be ignored if the value is blank.
         # This value is cleared out in an after_validate callback. If there
         # were not errors on the password attribute, then password_hash will be
@@ -140,6 +138,9 @@ module LWT
         def password_confirmation=( password )
           @password_confirmation = password.blank? ? nil : password
         end
+        
+        def password; end
+        def password_confirmation; end
 
         # This method determines if this user has any of the passed in privileges.
         # The the arguments are expected to be symbols.
