@@ -37,10 +37,12 @@ module LWT
           extend LWT::AuthenticationSystem::Model::SingletonMethods
 
           self.lwt_authentication_system_options = {
-            :group_validation => "Group cannot be blank",
-            :password_validation => "Passwords must match",
-            :username_validation => "Username cannot be blank",
-            :username_unique_validation => "Username has already been taken",
+            :group_validation => "cannot be blank",
+            :password_validation => "must match",
+            :username_validation => "cannot be blank",
+            :username_unique_validation => "has already been taken",
+            :email_address_validation => "cannot be blank",
+            :email_address_unique_validation => "has already been taken",
             :use_salt => false
           }.merge( options )
 
@@ -61,6 +63,14 @@ module LWT
 
           if msg = lwt_authentication_system_options[:username_unique_validation]
             validates_uniqueness_of :username, :message => msg
+          end
+
+          if msg = lwt_authentication_system_options[:email_address_validation]
+            validates_presence_of :email_address, :message => msg
+          end
+
+          if msg = lwt_authentication_system_options[:email_address_unique_validation]
+            validates_uniqueness_of :email_address, :message => msg
           end
 
           if msg = self.lwt_authentication_system_options[:password_validation]

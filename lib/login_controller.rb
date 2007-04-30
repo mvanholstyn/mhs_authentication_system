@@ -29,6 +29,7 @@ module LWT
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
+            :forgot_password_flash => "Please enter your email address",
             :track_pre_login_url => true
           }.merge( options )
 
@@ -90,6 +91,38 @@ module LWT
           session[:current_user_id] = nil
           self.set_current_user nil
           redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_logout] )
+        end
+
+        def forgot_password
+          if request.post?
+            email_address = params[:user][:email_address]
+            if email_address.blank? || ( user = self.class.login_model.find_by_email_address( email_address ) ).nil?
+              flash.now[:error] = "Please enter a valid email address."
+            else
+              forgot_password = ForgotPassword.create_for_user( user )
+              url = url_for(:action => 'change_password', :id => user.id, :token => forgot_password.token)
+              ForgotPasswordMailer.deliver_forgot_password(user, forgot_password, url)
+              flash[:notice] = "Please check your email for instructions on resetting your password."
+              redirect_to :action => "login"
+            end
+          else
+            instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
+            flash.now[:notice] = self.class.lwt_authentication_system_options[:forgot_password_flash]
+          end
+        end
+        
+        def change_password
+          forgot_password = ForgotPassword.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
+          @user = forgot_password.user
+          if !forgot_password 
+            redirect_to :action => "login"
+          elsif request.post?
+            if @user.update_attributes( params[:user] )
+              forgot_password.destroy
+              flash[:notice] = "Your password has been updated."
+              redirect_to :action => "login"
+            end
+          end
         end
 
       private

@@ -10,6 +10,7 @@ class LwtAuthenticationSystemGenerator < Rails::Generator::Base
       m.directory File.join( *%w{ app models } )
       m.directory File.join( *%w{ app controllers } )
       m.directory File.join( *%w{ app views users } )
+      m.directory File.join( *%w{ app views forgot_password_mailer } )
       m.directory File.join( *%w{ db migrate } )
       m.directory File.join( *%w{ test fixtures } )
 
