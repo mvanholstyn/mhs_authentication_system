@@ -117,7 +117,7 @@ module LWT
         def change_password
           reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
           if reminder
-            @user = reminder.user
+            @user = User.find( reminder.user_id ) #TODO: Why does reminder.user cause validations to not be run on the second try in the same session?
           else
             redirect_to :action => "login"
             return
