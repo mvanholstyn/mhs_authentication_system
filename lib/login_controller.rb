@@ -115,16 +115,17 @@ module LWT
         end
         
         def change_password
-          forgot_password = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
-          if forgot_password
-            @user = forgot_password.user
+          reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
+          if reminder
+            @user = reminder.user
           else
             redirect_to :action => "login"
+            return
           end
           
           if request.post?  
             if @user.update_attributes( params[self.class.login_model_name.to_sym] )
-              forgot_password.destroy
+              reminder.destroy
               flash[:notice] = self.class.lwt_authentication_system_options[:change_password_success_flash]
               self.set_current_user @user
               do_redirect_after_login
