@@ -113,10 +113,13 @@ module LWT
         
         def change_password
           forgot_password = ForgotPassword.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
-          @user = forgot_password.user
-          if !forgot_password 
+          if forgot_password
+            @user = forgot_password.user
+          else
             redirect_to :action => "login"
-          elsif request.post?
+          end
+          
+          if request.post?  
             if @user.update_attributes( params[:user] )
               forgot_password.destroy
               flash[:notice] = "Your password has been updated."
