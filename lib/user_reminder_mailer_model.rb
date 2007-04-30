@@ -4,7 +4,7 @@ if( UserReminderMailer rescue true )
 end
 
 UserReminderMailer.class_eval do
-  def forgot_password(user, reminder, url)
+  def reminder(user, reminder, url)
     recipients user.email_address
 #    from ""
     subject "Reminder"
