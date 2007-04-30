@@ -20,7 +20,7 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.column :email_address, :string
     end
     
-    create_table :forgot_password do |t|
+    create_table :user_reminders do |t|
       t.column :user_id, :integer
       t.column :token, :string
       t.column :expires_at, :datetime
