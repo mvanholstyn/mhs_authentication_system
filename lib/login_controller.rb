@@ -107,7 +107,6 @@ module LWT
               url = url_for(:action => 'change_password', :id => user.id, :token => reminder.token)
               UserReminderMailer.deliver_reminder(user, reminder, url)
               flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
-              redirect_to :action => "login"
             end
           else
             instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
@@ -116,7 +115,7 @@ module LWT
         end
         
         def change_password
-          forgot_password = ForgotPassword.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
+          forgot_password = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
           if forgot_password
             @user = forgot_password.user
           else
