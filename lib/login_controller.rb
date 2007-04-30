@@ -125,7 +125,7 @@ module LWT
           
           if request.post?
             if @user.update_attributes( params[self.class.login_model_name.to_sym] )
-              #reminder.destroy
+              reminder.destroy
               flash[:notice] = self.class.lwt_authentication_system_options[:change_password_success_flash]
               self.set_current_user @user
               do_redirect_after_login
