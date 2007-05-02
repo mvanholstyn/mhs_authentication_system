@@ -4,11 +4,10 @@ if( UserReminderMailer rescue true )
 end
 
 UserReminderMailer.class_eval do
-  def reminder(user, reminder, url)
+  def reminder( user, reminder, url, options = {} )
     recipients user.email_address
-#    from ""
-    subject "Reminder"
-    
+    from options[:from]
+    subject options[:subject]
     body :user => user, :reminder => reminder, :url => url
   end
 end

@@ -34,6 +34,8 @@ module LWT
             :reminder_success_flash => "Please check your email to retrieve your account information",
             :change_password_flash => "Update your password",
             :change_password_success_flash => "Your password has been successfully updated",
+            :reminder_email_from => "Support",
+            :reminder_email_subject => "Support Reminder",
             :track_pre_login_url => true
           }.merge( options )
 
@@ -105,7 +107,9 @@ module LWT
             else
               reminder = UserReminder.create_for_user( user )
               url = url_for(:action => 'change_password', :id => user.id, :token => reminder.token)
-              UserReminderMailer.deliver_reminder(user, reminder, url)
+              UserReminderMailer.deliver_reminder(user, reminder, url, 
+                :from => self.class.lwt_authentication_system_options[:reminder_email_from], 
+                :subject => self.class.lwt_authentication_system_options[:reminder_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
             end
           else
