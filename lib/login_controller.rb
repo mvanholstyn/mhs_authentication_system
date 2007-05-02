@@ -128,6 +128,7 @@ module LWT
           reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
           if reminder
             self.set_current_user User.find( reminder.user_id )
+            reminder.destroy
             do_redirect_after_reminder_login
           else
             redirect_to :action => "login"
