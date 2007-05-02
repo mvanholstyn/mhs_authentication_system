@@ -107,7 +107,9 @@ module LWT
         end
         
         def find_and_set_current_user
-          set_current_user self.class.login_model.find( session[:current_user_id], :include => { :group => :privileges } )
+          if session[:current_user_id]
+            set_current_user self.class.login_model.find( session[:current_user_id], :include => { :group => :privileges } )
+          end
         end
       end
     end
