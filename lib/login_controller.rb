@@ -81,7 +81,7 @@ module LWT
           if request.post?
             instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.login( params[self.class.login_model_name.to_sym] ) )
             if model
-              self.set_current_user model
+              set_current_user model
               do_redirect_after_login
               return
             else
@@ -99,8 +99,7 @@ module LWT
         # The logout action resets the session and rediects the user to
         # the page defined in redirect_after_logout.
         def logout
-          session[:current_user_id] = nil
-          self.set_current_user nil
+          set_current_user nil
           redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_logout] )
         end
 

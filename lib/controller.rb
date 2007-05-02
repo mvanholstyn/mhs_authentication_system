@@ -103,6 +103,7 @@ module LWT
           elsif session[:current_user_id]
             self.class.login_model.current_user = self.class.login_model.find session[:current_user_id], :include => { :group => :privileges }
           else
+            session[:current_user_id] = nil
             self.class.login_model.current_user = nil
           end
         end
