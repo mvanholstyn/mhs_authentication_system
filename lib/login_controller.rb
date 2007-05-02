@@ -54,6 +54,13 @@ module LWT
         end
 
         # Sets the arguments to be passed to redirect_to after a user
+        # successfully logs in. The block will be evaluated in the scope
+        # of the controller.
+        def redirect_after_reminder_login &blk
+          self.lwt_authentication_system_options[:redirect_after_reminder_login] = blk
+        end
+
+        # Sets the arguments to be passed to redirect_to after a user
         # successfully logs out. The block will be evaluated in the scope
         # of the controller.
         def redirect_after_logout &blk
@@ -121,11 +128,7 @@ module LWT
           reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
           if reminder
             self.set_current_user reminder.user
-            if url = self.class.lwt_authentication_system_options[:reminder_login_redirect]
-              redirect_to url
-            else
-              do_redirect_after_login
-            end
+            do_redirect_after_reminder_login
           else
             redirect_to :action => "login"
             return
@@ -133,6 +136,14 @@ module LWT
         end
 
       private
+        def do_redirect_after_reminder_login
+          if url = self.class.lwt_authentication_system_options[:redirect_after_reminder_login]
+            redirect_to url
+          else
+            do_redirect_after_login
+          end
+        end
+      
         def do_redirect_after_login
           if self.class.lwt_authentication_system_options[:track_pre_login_url] and session[:pre_login_url]
             redirect_to session[:pre_login_url]
