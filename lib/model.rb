@@ -62,7 +62,7 @@ module LWT
           end
 
           if msg = lwt_authentication_system_options[:username_unique_validation]
-            validates_uniqueness_of :username, :message => msg
+            validates_uniqueness_of :username, :message => msg, :allow_nil => true
           end
 
           if msg = lwt_authentication_system_options[:email_address_validation]
