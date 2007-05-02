@@ -9,7 +9,7 @@ module LWT
         base.class_inheritable_accessor :permission_granted, :permission_denied, :not_logged_in, :login_model_name, :login_controller_name
         base.helper_method :current_user, :restrict_to
 
-        base.before_filter :set_current_user
+        base.before_filter :find_and_set_current_user
 
         base.set_login_model :user
         base.set_login_controller :users_controller
@@ -96,16 +96,18 @@ module LWT
           end
         end
 
-        def set_current_user user = nil
+        def set_current_user user
           if user.is_a? self.class.login_model
             session[:current_user_id] = user.id
             self.class.login_model.current_user = user
-          elsif session[:current_user_id]
-            self.class.login_model.current_user = self.class.login_model.find session[:current_user_id], :include => { :group => :privileges }
-          else
+          elsif user.is_a? NilClass
             session[:current_user_id] = nil
             self.class.login_model.current_user = nil
           end
+        end
+        
+        def find_and_set_current_user
+          set_current_user self.class.login_model.find( session[:current_user_id], :include => { :group => :privileges } )
         end
       end
     end
