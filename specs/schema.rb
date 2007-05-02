@@ -20,12 +20,14 @@ ActiveRecord::Schema.define do
     t.column :username, :string
     t.column :password_hash, :string
     t.column :group_id, :integer
+    t.column :email_address, :string
   end
 
   create_table :non_validating_lwt_authentication_system_users, :force => true do |t|
     t.column :username, :string
     t.column :password_hash, :string
     t.column :group_id, :integer
+    t.column :email_address, :string
   end
 
 end

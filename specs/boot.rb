@@ -1,7 +1,9 @@
 dir = File.dirname( __FILE__ )
 
+require 'rubygems'
 require 'active_record'
 require 'action_controller'
+require 'action_mailer'
 require 'test/unit'
 
 require File.join( dir, '../init' )
@@ -21,7 +23,9 @@ class LwtAuthenticationSystemUser < ActiveRecord::Base
 end
 
 class NonValidatingLwtAuthenticationSystemUser < ActiveRecord::Base
-  acts_as_login_model :group_validation => false, :password_validation => false, :username_validation => false, :username_unique_validation => false
+  acts_as_login_model :group_validation => false, :password_validation => false, 
+    :username_validation => false, :username_unique_validation => false, 
+    :email_address_validation => false, :email_address_unique_validation => false
 end
 
 
