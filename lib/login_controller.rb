@@ -129,7 +129,8 @@ module LWT
           end
           
           if request.post?
-            if @user.update_attributes( params[self.class.login_model_name.to_sym] )
+            @user.attributes = params[self.class.login_model_name.to_sym]
+            if ( @user.valid? or @user.errors.on( :password ).nil? ) and @user.save_without_validation
               reminder.destroy
               flash[:notice] = self.class.lwt_authentication_system_options[:change_password_success_flash]
               self.set_current_user @user
