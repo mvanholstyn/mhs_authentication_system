@@ -1,0 +1,3 @@
+:test:
+  adapter: sqlite3
+  database: specs/db/lwt_authentication_system_test.db

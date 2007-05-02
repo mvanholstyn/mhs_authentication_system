@@ -8,11 +8,11 @@ require 'test/unit'
 
 require File.join( dir, '../init' )
 
-ActiveRecord::Base.logger = Logger.new File.join( dir, 'test.log' )
-ActiveRecord::Base.establish_connection YAML.load_file( File.join( dir, 'database.yml' ) )[:test]
+ActiveRecord::Base.logger = Logger.new File.join( dir, 'log/test.log' )
+ActiveRecord::Base.establish_connection YAML.load_file( File.join( dir, 'config/database.yml' ) )[:test]
 
 ActiveRecord::Schema.suppress_messages do
-  require File.join( dir, 'schema' )
+  require File.join( dir, 'db/schema' )
 end
 
 class NormalUser < ActiveRecord::Base
