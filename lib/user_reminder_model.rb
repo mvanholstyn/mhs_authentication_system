@@ -5,6 +5,8 @@ end
 
 UserReminder.class_eval do
   belongs_to :user
+  
+  validates_uniqueness_of :token
 
   def self.create_for_user user, expires_at = Time.now + 2.hours
     create :user_id => user.id, :token => generate_token, :expires_at => expires_at

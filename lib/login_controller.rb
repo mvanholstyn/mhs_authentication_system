@@ -32,8 +32,6 @@ module LWT
             :reminder_flash => "Please enter the email address of the account whose information you would like to retrieve",
             :reminder_error_flash => "The email address you entered was not found",
             :reminder_success_flash => "Please check your email to retrieve your account information",
-            :change_password_flash => "Update your password",
-            :change_password_success_flash => "Your password has been successfully updated",
             :reminder_email_from => "Support",
             :reminder_email_subject => "Support Reminder",
             :track_pre_login_url => true
@@ -106,7 +104,7 @@ module LWT
               flash.now[:error] = self.class.lwt_authentication_system_options[:reminder_error_flash]
             else
               reminder = UserReminder.create_for_user( user )
-              url = url_for(:action => 'change_password', :id => user.id, :token => reminder.token)
+              url = url_for(:action => 'reminder_login', :id => user, :token => reminder.token)
               UserReminderMailer.deliver_reminder(user, reminder, url, 
                 :from => self.class.lwt_authentication_system_options[:reminder_email_from], 
                 :subject => self.class.lwt_authentication_system_options[:reminder_email_subject] )
@@ -119,25 +117,18 @@ module LWT
           end
         end
         
-        def change_password
+        def reminder_login
           reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
           if reminder
-            @user = User.find( reminder.user_id ) #TODO: Why does reminder.user cause validations to not be run on the second try in the same session?
-          else
-            redirect_to :action => "login"
-            return
-          end
-          
-          if request.post?
-            @user.attributes = params[self.class.login_model_name.to_sym]
-            if ( @user.valid? or @user.errors.on( :password ).nil? ) and @user.save_without_validation
-              reminder.destroy
-              flash[:notice] = self.class.lwt_authentication_system_options[:change_password_success_flash]
-              self.set_current_user @user
+            self.set_current_user reminder.user
+            if url = self.class.lwt_authentication_system_options[:reminder_login_redirect]
+              redirect_to url
+            else
               do_redirect_after_login
             end
           else
-            flash[:notice] = self.class.lwt_authentication_system_options[:change_password_flash]
+            redirect_to :action => "login"
+            return
           end
         end
 
