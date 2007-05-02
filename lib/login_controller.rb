@@ -137,8 +137,8 @@ module LWT
 
       private
         def do_redirect_after_reminder_login
-          if url = self.class.lwt_authentication_system_options[:redirect_after_reminder_login]
-            redirect_to url
+          if blk = self.class.lwt_authentication_system_options[:redirect_after_reminder_login]
+            redirect_to self.instance_eval( &blk )
           else
             do_redirect_after_login
           end
