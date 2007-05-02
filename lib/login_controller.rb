@@ -87,7 +87,7 @@ module LWT
             return
           else
             instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
-            flash.now[:notice] = self.class.lwt_authentication_system_options[:login_flash]
+            flash.now[:notice] ||= self.class.lwt_authentication_system_options[:login_flash]
           end
         end
 
@@ -111,6 +111,7 @@ module LWT
                 :from => self.class.lwt_authentication_system_options[:reminder_email_from], 
                 :subject => self.class.lwt_authentication_system_options[:reminder_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
+              redirect_to :action => "login"
             end
           else
             instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
