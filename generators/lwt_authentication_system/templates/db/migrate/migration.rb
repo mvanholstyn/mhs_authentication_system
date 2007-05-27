@@ -37,5 +37,6 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
     drop_table :groups_privileges
     drop_table :privileges
     drop_table :groups
+    drop_table :user_reminders
   end
 end
