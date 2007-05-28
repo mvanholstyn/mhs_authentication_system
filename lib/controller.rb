@@ -39,9 +39,7 @@ module LWT
 
           before_filter( options ) do |c|
             if !c.current_user.is_a? self.login_model
-              c.session[:pre_login_url] = c.url_for
-              
-              ( c.params )
+              c.session[:pre_login_url] = c.url_for( c.params )
               c.instance_eval &c.class.not_logged_in
             elsif c.current_user.has_privilege?( *privileges )
               c.instance_eval &c.class.permission_granted
