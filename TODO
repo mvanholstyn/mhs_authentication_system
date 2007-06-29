@@ -18,6 +18,7 @@ Ideas
  ? Users can belong to many groups
  ? Add "Remember Me" functionality
  ? Rename Group to Role
+ ? can_xxx? helpers for privileges
 
 
 Object level privileges
