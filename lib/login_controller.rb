@@ -29,6 +29,9 @@ module LWT
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
+            :signup_flash => "Please signup",
+            :successful_signup_flash => "You have successfully signed up",
+            :allow_signup => false,
             :reminder_flash => "Please enter the email address of the account whose information you would like to retrieve",
             :reminder_error_flash => "The email address you entered was not found",
             :reminder_success_flash => "Please check your email to retrieve your account information",
@@ -37,6 +40,10 @@ module LWT
             :reminder_login_duration => 2.hours,
             :track_pre_login_url => true
           }.merge( options )
+          
+          if lwt_authentication_system_options[:allow_signup]
+            include LWT::AuthenticationSystem::LoginController::SignupInstanceMethods
+          end
 
           redirect_after_logout do
             { :action => 'login' }
@@ -151,6 +158,20 @@ module LWT
             session[:pre_login_url] = nil
           else
             redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_login] )
+          end
+        end
+      end
+
+      module SignupInstanceMethods 
+        def signup
+          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
+          if request.post?
+            if model.save
+              flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
+              redirect_to :action => "login"
+            end
+          else
+            flash[:notice] = self.class.lwt_authentication_system_options[:signup_flash]
           end
         end
       end
