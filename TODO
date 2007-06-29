@@ -7,7 +7,7 @@ Controller
 
 Model
  ? Allow custom validation msg for group and priv validations
- ? allow configuration of username, password_hash, and salt column names
+ ? allow configuration of password_hash, and salt column names
  ! Revisit mixin for group/priv/group_priv/forgot_pass/forgot_pass_mailer
 
 Ideas

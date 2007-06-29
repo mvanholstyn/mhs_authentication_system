@@ -110,7 +110,10 @@ module LWT
           if session[:current_user_id]
             set_current_user self.class.login_model.find( session[:current_user_id], :include => { :group => :privileges } )
           else
-            set_current_user authenticate_with_http_basic { |u, p| self.class.login_model.login( :username => u, :password => p ) }
+            user = authenticate_with_http_basic do |l, p| 
+              self.class.login_model.login( self.class.login_model.lwt_authentication_system_options[:login_attribute] => l, :password => p )
+            end
+            set_current_user user
           end
         end
       end

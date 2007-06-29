@@ -10,8 +10,10 @@ module LWT
       module ClassMethods
         # Sets up this model as a login model. The following thigs are done:
         # * belongs_to :group
-        # * validates_presence_of :username
-        # * validates_uniqueness_of :username
+        # * validates_presence_of options[:login_attribute] (not used if options[:login_attribute] is :email_address)
+        # * validates_uniqueness_of options[:login_attribute] (not used if options[:login_attribute] is :email_address)
+        # * validates_presence_of :email_address
+        # * validates_uniqueness_of :email_address
         # * sets up validation to check that password and password_confirmation
         #   match if either are set (to something that is not blank)
         # * sets up after_validation callbacks to clear password and password_confirmation.
@@ -23,13 +25,21 @@ module LWT
         # Valid options:
         # - :password_validation - Error message used when the passwords do not match.
         #   If this check is not desired, set this to false or nil.
-        #   Default: "Passwords must match"
-        # - :username_validation - Error message used when the username is blank.
+        #   Default: "must match"
+        # - :login_validation - Error message used when the options[:login_attribute] is blank.
         #   If this check is not desired, set this to false or nil.
-        #   Default: "Username can't be blank"
-        # - :username_unique_validation - Error message used when the username is
+        #   Default: "can't be blank"
+        # - :login_unique_validation - Error message used when the options[:login_attribute] is
         #   already in use. If this check is not desired, set to false or nil.
-        #   Default: "Username has already been taken"
+        #   Default: "has already been taken"
+        # - :email_address_validation - Error message used when the email_address is blank.
+        #   If this check is not desired, set this to false or nil.
+        #   Default: "can't be blank"
+        # - :email_address_unique_validation - Error message used when the email_address is
+        #   already in use. If this check is not desired, set to false or nil.
+        #   Default: "has already been taken"
+        # - :login_attribute - The attribute to use to uniquely identify each user.
+        #   Default: :username
         # - :use_salt - If true, the hash_password method will be sent a salt along with a
         #   password. The salt will be stored in database column salt. Defaults: false
         def acts_as_login_model options = {}
@@ -39,10 +49,11 @@ module LWT
           self.lwt_authentication_system_options = {
             :group_validation => "can't be blank",
             :password_validation => "must match",
-            :username_validation => "can't be blank",
-            :username_unique_validation => "has already been taken",
+            :login_validation => "can't be blank",
+            :login_unique_validation => "has already been taken",
             :email_address_validation => "can't be blank",
             :email_address_unique_validation => "has already been taken",
+            :login_attribute => :username,
             :use_salt => false
           }.merge( options )
 
@@ -57,12 +68,14 @@ module LWT
             validates_presence_of :group_id, :message => msg
           end
 
-          if msg = lwt_authentication_system_options[:username_validation]
-            validates_presence_of :username, :message => msg
-          end
+          if lwt_authentication_system_options[:login_attribute] != :email_address
+            if msg = lwt_authentication_system_options[:login_validation]
+              validates_presence_of lwt_authentication_system_options[:login_attribute], :message => msg
+            end
 
-          if msg = lwt_authentication_system_options[:username_unique_validation]
-            validates_uniqueness_of :username, :message => msg, :allow_nil => true
+            if msg = lwt_authentication_system_options[:login_unique_validation]
+              validates_uniqueness_of lwt_authentication_system_options[:login_attribute], :message => msg, :allow_nil => true
+            end
           end
 
           if msg = lwt_authentication_system_options[:email_address_validation]
