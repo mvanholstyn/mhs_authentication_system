@@ -34,6 +34,7 @@ module LWT
             :reminder_success_flash => "Please check your email to retrieve your account information",
             :reminder_email_from => "Support",
             :reminder_email_subject => "Support Reminder",
+            :reminder_login_duration => 2.hours,
             :track_pre_login_url => true
           }.merge( options )
 
@@ -109,7 +110,7 @@ module LWT
             if email_address.blank? || ( user = self.class.login_model.find_by_email_address( email_address ) ).nil?
               flash.now[:error] = self.class.lwt_authentication_system_options[:reminder_error_flash]
             else
-              reminder = UserReminder.create_for_user( user )
+              reminder = UserReminder.create_for_user( user, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
               url = url_for(:action => 'reminder_login', :id => user, :token => reminder.token)
               UserReminderMailer.deliver_reminder(user, reminder, url, 
                 :from => self.class.lwt_authentication_system_options[:reminder_email_from], 
