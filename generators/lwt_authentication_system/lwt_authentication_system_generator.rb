@@ -24,6 +24,8 @@ class LwtAuthenticationSystemGenerator < Rails::Generator::Base
       m.template 'test/fixtures/privileges.yml', File.join( *%w{ test fixtures privileges.yml } )
       m.template 'test/fixtures/users.yml', File.join( *%w{ test fixtures users.yml } )
       m.migration_template 'db/migrate/migration.rb', File.join( *%w{ db migrate } ), :migration_file_name => "add_lwt_authentication_system"
+      
+      # m.route 'config/routes.rb'
     end
   end
 end
