@@ -26,7 +26,7 @@ module LWT
         #   Default: "Passwords must match"
         # - :username_validation - Error message used when the username is blank.
         #   If this check is not desired, set this to false or nil.
-        #   Default: "Username cannot be blank"
+        #   Default: "Username can't be blank"
         # - :username_unique_validation - Error message used when the username is
         #   already in use. If this check is not desired, set to false or nil.
         #   Default: "Username has already been taken"
@@ -37,11 +37,11 @@ module LWT
           extend LWT::AuthenticationSystem::Model::SingletonMethods
 
           self.lwt_authentication_system_options = {
-            :group_validation => "cannot be blank",
+            :group_validation => "can't be blank",
             :password_validation => "must match",
-            :username_validation => "cannot be blank",
+            :username_validation => "can't be blank",
             :username_unique_validation => "has already been taken",
-            :email_address_validation => "cannot be blank",
+            :email_address_validation => "can't be blank",
             :email_address_unique_validation => "has already been taken",
             :use_salt => false
           }.merge( options )
