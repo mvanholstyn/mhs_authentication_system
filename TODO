@@ -12,7 +12,9 @@ Model
 
 Ideas
  * Object level privileges
- * Signup/activation system
+ * Signup hooks and options
+ * Account activation
+ * Profile options
  * Preferences system
  ? Syntax for asking for permission a & b (not just or)
  ? Users can belong to many groups
