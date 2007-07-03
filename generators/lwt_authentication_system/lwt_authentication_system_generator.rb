@@ -18,6 +18,7 @@ class LwtAuthenticationSystemGenerator < Rails::Generator::Base
       m.template 'app/models/model.rb', File.join( *%w{ app models user.rb } )
       m.template 'app/views/user_reminder_mailer/reminder.html.erb', File.join( *%W{ app views user_reminder_mailer reminder.html.erb } )
       m.template 'app/views/users/login.html.erb', File.join( *%W{ app views users login.html.erb } )
+      m.template 'app/views/users/profile.html.erb', File.join( *%W{ app views users profile.html.erb } )
       m.template 'app/views/users/reminder.html.erb', File.join( *%W{ app views users reminder.html.erb } )
       m.template 'app/views/users/signup.html.erb', File.join( *%W{ app views users signup.html.erb } )
       m.template 'test/fixtures/groups.yml', File.join( *%w{ test fixtures groups.yml } )

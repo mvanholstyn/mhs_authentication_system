@@ -142,6 +142,23 @@ module LWT
             return
           end
         end
+        
+        def profile
+          instance_variable_set( "@#{self.class.login_model_name}", current_user )
+    
+          if request.put?
+            respond_to do |format|
+              if current_user.update_attributes(params[self.class.login_model_name.to_sym])
+                flash[:notice] = 'Your profile was successfully updated.'
+                format.html { redirect_to "/" }
+                format.xml  { head :ok }
+              else
+                format.html
+                format.xml  { render :xml => current_user.errors }
+              end
+            end
+          end
+        end
 
       private
         def do_redirect_after_reminder_login
