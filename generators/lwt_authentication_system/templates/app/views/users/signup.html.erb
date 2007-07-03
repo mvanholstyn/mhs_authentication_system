@@ -1,17 +1,14 @@
-<div class="notice"><%%= flash[:notice] %></div>
-<div class="error"><%%= flash[:error] %></div>
-
 <%= error_messages_for :user %>
 
 <%% form_for :user do |form| -%>
 	<p>
-  	<b>Email Address</b><br />
-		<%%= form.text_field :email_address %>
+  	<b>Username</b><br />
+		<%%= form.text_field :username %>
   </p>
 
 	<p>
-  	<b>Username</b><br />
-		<%%= form.text_field :username %>
+  	<b>Email Address</b><br />
+		<%%= form.text_field :email_address %>
   </p>
 
 	<p>
@@ -22,11 +19,6 @@
 	<p>
   	<b>Password Confirmation</b><br />
 		<%%= form.password_field :password_confirmation %>
-  </p>
-
-	<p>
-  	<b>Group</b><br />
-		<%%= form.collection_select :group_id, Group.find(:all), :id, :name, :include_blank => true %>
   </p>
 
 	<p>
