@@ -48,6 +48,10 @@ module LWT
           redirect_after_logout do
             { :action => 'login' }
           end
+
+          redirect_after_signup do
+            { :action => 'login' }
+          end
         end
       end
 
@@ -73,6 +77,13 @@ module LWT
         # of the controller.
         def redirect_after_logout &blk
           self.lwt_authentication_system_options[:redirect_after_logout] = blk
+        end
+
+        # Sets the arguments to be passed to redirect_to after a user
+        # successfully signs up. The block will be evaluated in the scope
+        # of the controller.
+        def redirect_after_signup &blk
+          self.lwt_authentication_system_options[:redirect_after_signup] = blk
         end
       end
 
@@ -185,7 +196,7 @@ module LWT
           if request.post?
             if model.save
               flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
-              redirect_to :action => "login"
+              redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_signup] )
             end
           else
             flash[:notice] = self.class.lwt_authentication_system_options[:signup_flash]
