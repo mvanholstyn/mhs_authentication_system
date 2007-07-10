@@ -161,7 +161,7 @@ module LWT
             respond_to do |format|
               if current_user.update_attributes(params[self.class.login_model_name.to_sym])
                 flash[:notice] = 'Your profile was successfully updated.'
-                format.html { redirect_to "/" }
+                format.html { do_redirect_after_login }
                 format.xml  { head :ok }
               else
                 format.html
