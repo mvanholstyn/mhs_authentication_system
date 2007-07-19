@@ -188,7 +188,7 @@ module LWT
           instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
           if request.post?
             if model.save
-              UserReminderMailer.deliver_signup(user, reminder, url, 
+              UserReminderMailer.deliver_signup(model, reminder, url, 
                 :from => self.class.lwt_authentication_system_options[:email_from], 
                 :subject => self.class.lwt_authentication_system_options[:signup_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
