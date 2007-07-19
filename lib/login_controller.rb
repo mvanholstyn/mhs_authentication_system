@@ -58,6 +58,19 @@ module LWT
 
       module SingletonMethods
         attr_accessor :lwt_authentication_system_options
+        
+        # Update restrict_to to automatically ignore the login, logout, reminder, profile, and signup actions
+        def restrict_to *privileges
+          options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
+
+          if not options[:only]
+            options[:except] = Array(options[:except]) + [:login, :logout, :reminder, :profile, :signup]
+          end
+          
+          privileges << options
+          
+          super( *privileges )
+        end
 
         # Sets the arguments to be passed to redirect_to after a user
         # successfully logs in. The block will be evaluated in the scope
@@ -148,19 +161,23 @@ module LWT
         end
         
         def profile
-          instance_variable_set( "@#{self.class.login_model_name}", current_user )
+          if current_user
+            instance_variable_set( "@#{self.class.login_model_name}", current_user )
     
-          if request.put?
-            respond_to do |format|
-              if current_user.update_attributes(params[self.class.login_model_name.to_sym])
-                flash[:notice] = 'Your profile was successfully updated.'
-                format.html { do_redirect_after_login }
-                format.xml  { head :ok }
-              else
-                format.html
-                format.xml  { render :xml => current_user.errors }
+            if request.put?
+              respond_to do |format|
+                if current_user.update_attributes(params[self.class.login_model_name.to_sym])
+                  flash[:notice] = 'Your profile was successfully updated.'
+                  format.html { do_redirect_after_login }
+                  format.xml  { head :ok }
+                else
+                  format.html
+                  format.xml  { render :xml => current_user.errors }
+                end
               end
             end
+          else
+            redirect_to :action => "login"
           end
         end
 
