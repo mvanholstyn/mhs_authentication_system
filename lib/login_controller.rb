@@ -35,9 +35,10 @@ module LWT
             :reminder_flash => "Please enter the email address of the account whose information you would like to retrieve",
             :reminder_error_flash => "The email address you entered was not found",
             :reminder_success_flash => "Please check your email to retrieve your account information",
-            :reminder_email_from => "Support",
-            :reminder_email_subject => "Support Reminder",
+            :email_from => "Support",
             :reminder_login_duration => 2.hours,
+            :reminder_email_subject => "Support Reminder",
+            :signup_email_subject => "Welcome",
             :track_pre_login_url => true
           }.merge( options )
           
@@ -106,6 +107,10 @@ module LWT
             else
               flash.now[:error] = self.class.lwt_authentication_system_options[:invalid_login_flash]
             end
+          elsif params[:id] and params[:token] and reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
+            self.set_current_user self.class.login_model.find( reminder.user_id )
+            reminder.destroy
+            do_redirect_after_reminder_login
           elsif self.current_user
             do_redirect_after_login
             return
@@ -129,9 +134,9 @@ module LWT
               flash.now[:error] = self.class.lwt_authentication_system_options[:reminder_error_flash]
             else
               reminder = UserReminder.create_for_user( user, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
-              url = url_for(:action => 'reminder_login', :id => user, :token => reminder.token)
+              url = url_for(:action => 'login', :id => user, :token => reminder.token)
               UserReminderMailer.deliver_reminder(user, reminder, url, 
-                :from => self.class.lwt_authentication_system_options[:reminder_email_from], 
+                :from => self.class.lwt_authentication_system_options[:email_from], 
                 :subject => self.class.lwt_authentication_system_options[:reminder_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
               redirect_to :action => "login"
@@ -139,18 +144,6 @@ module LWT
           else
             instance_variable_set( "@#{self.class.login_model_name}", self.class.login_model.new )
             flash.now[:notice] = self.class.lwt_authentication_system_options[:reminder_flash]
-          end
-        end
-        
-        def reminder_login
-          reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
-          if reminder
-            self.set_current_user self.class.login_model.find( reminder.user_id )
-            reminder.destroy
-            do_redirect_after_reminder_login
-          else
-            redirect_to :action => "login"
-            return
           end
         end
         
@@ -195,6 +188,9 @@ module LWT
           instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
           if request.post?
             if model.save
+              UserReminderMailer.deliver_signup(user, reminder, url, 
+                :from => self.class.lwt_authentication_system_options[:email_from], 
+                :subject => self.class.lwt_authentication_system_options[:signup_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
               redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_signup] )
             end
