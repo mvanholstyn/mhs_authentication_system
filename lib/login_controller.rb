@@ -130,12 +130,12 @@ module LWT
         def reminder
           if request.post?
             email_address = params[self.class.login_model_name.to_sym][:email_address]
-            if email_address.blank? || ( user = self.class.login_model.find_by_email_address( email_address ) ).nil?
+            if email_address.blank? || ( model = self.class.login_model.find_by_email_address( email_address ) ).nil?
               flash.now[:error] = self.class.lwt_authentication_system_options[:reminder_error_flash]
             else
-              reminder = UserReminder.create_for_user( user, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
-              url = url_for(:action => 'login', :id => user, :token => reminder.token)
-              UserReminderMailer.deliver_reminder(user, reminder, url, 
+              reminder = UserReminder.create_for_user( model, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
+              url = url_for(:action => 'login', :id => model, :token => reminder.token)
+              UserReminderMailer.deliver_reminder(model, reminder, url, 
                 :from => self.class.lwt_authentication_system_options[:email_from], 
                 :subject => self.class.lwt_authentication_system_options[:reminder_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:reminder_success_flash]
