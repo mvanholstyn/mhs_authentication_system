@@ -60,7 +60,7 @@ module LWT
         attr_accessor :lwt_authentication_system_options
         
         # Update restrict_to to automatically ignore the login, logout, reminder, profile, and signup actions
-        def restrict_to *privileges
+        def restrict_to *privileges, &blk
           options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
 
           if not options[:only]
@@ -69,7 +69,7 @@ module LWT
           
           privileges << options
           
-          super( *privileges )
+          super( *privileges, &blk )
         end
 
         # Sets the arguments to be passed to redirect_to after a user

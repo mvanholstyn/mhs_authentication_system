@@ -34,14 +34,14 @@ module LWT
         # This is used to restrict access to action based on privileges of the current user.
         # This method takes a list of privileges which should be allowes, as well as the options
         # hash which will be passed to before_filter.
-        def restrict_to *privileges
+        def restrict_to *privileges, &blk          
           options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
 
           before_filter( options ) do |c|
             if !c.current_user.is_a? self.login_model
               c.session[:pre_login_url] = c.url_for( c.params )
               c.instance_eval &c.class.not_logged_in
-            elsif c.current_user.has_privilege?( *privileges )
+            elsif c.current_user.has_privilege?( *privileges ) or (blk and c.instance_eval &blk)
               c.instance_eval &c.class.permission_granted
             else
               c.instance_eval &c.class.permission_denied
