@@ -107,7 +107,7 @@ module LWT
             else
               flash.now[:error] = self.class.lwt_authentication_system_options[:invalid_login_flash]
             end
-          elsif params[:id] and params[:token] and reminder = UserReminder.find :first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ]
+          elsif params[:id] and params[:token] and reminder = UserReminder.find(:first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ])
             self.set_current_user self.class.login_model.find( reminder.user_id )
             reminder.destroy
             do_redirect_after_reminder_login
