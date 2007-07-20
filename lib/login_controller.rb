@@ -29,6 +29,7 @@ module LWT
           self.lwt_authentication_system_options = {
             :login_flash => "Please login",
             :invalid_login_flash => "Invalid login credentials",
+            :inactive_login_flash => "Your account has not been activated",
             :signup_flash => "Please signup",
             :successful_signup_flash => "You have successfully signed up",
             :allow_signup => false,
@@ -114,14 +115,20 @@ module LWT
           if request.post?
             instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.login( params[self.class.login_model_name.to_sym] ) )
             if model
-              set_current_user model
-              do_redirect_after_login
-              return
+              if model.active?
+                set_current_user model
+                do_redirect_after_login
+                return
+              else
+                flash.now[:error] = self.class.lwt_authentication_system_options[:inactive_login_flash]
+              end
             else
               flash.now[:error] = self.class.lwt_authentication_system_options[:invalid_login_flash]
             end
           elsif params[:id] and params[:token] and reminder = UserReminder.find(:first, :conditions => [ "user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now ])
-            self.set_current_user self.class.login_model.find( reminder.user_id )
+            model = self.class.login_model.find( reminder.user_id )
+            model.update_attribute :active, true
+            self.set_current_user model
             reminder.destroy
             do_redirect_after_reminder_login
           elsif self.current_user
@@ -200,9 +207,9 @@ module LWT
         end
       end
 
-      module SignupInstanceMethods 
+      module SignupInstanceMethods
         def signup
-          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
+          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym].merge(:active => false) ) )
           if request.post?
             if model.save
               reminder = UserReminder.create_for_user( model, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )

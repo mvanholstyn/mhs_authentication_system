@@ -18,6 +18,7 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.column :password_hash, :string
       t.column :group_id, :integer
       t.column :email_address, :string
+      t.column :active, :boolean
     end
     
     create_table :user_reminders do |t|
@@ -25,11 +26,6 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.column :token, :string
       t.column :expires_at, :datetime
     end
-    
-    privilege = Privilege.create! :name => 'admin'
-    group = Group.create! :name => 'admin'
-    group_privilege = GroupPrivilege.create! :group_id => group.id, :privilege_id => privilege.id
-    user = User.create! :username => 'admin', :password => 'password', :password_confirmation => 'password', :group_id => group.id, :email_address => "admin@example.com"
   end
 
   def self.down
