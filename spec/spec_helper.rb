@@ -22,37 +22,52 @@ ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => File
 # Load schema
 ActiveRecord::Schema.suppress_messages do
   ActiveRecord::Schema.define do
-    create_table :groups, :force => true do |t|
-      t.column :name, :string
+    create_table :default_active_record_models, :force => true do |t|
     end
-
-    create_table :privileges, :force => true do |t|
-      t.column :name, :string
-    end
-
-    create_table :groups_privileges, :force => true do |t|
-      t.column :group_id, :integer
-      t.column :privilege_id, :integer
-    end
-
-    create_table :users, :force => true do |t|
+    
+    create_table :lwt_authentication_system_models, :force => true do |t|
       t.column :username, :string
       t.column :password_hash, :string
       t.column :group_id, :integer
       t.column :email_address, :string
       t.column :active, :boolean
     end
-  
-    create_table :user_reminders, :force => true do |t|
-      t.column :user_id, :integer
-      t.column :token, :string
-      t.column :expires_at, :datetime
-    end
+    
+    # create_table :groups, :force => true do |t|
+    #   t.column :name, :string
+    # end
+    # 
+    # create_table :privileges, :force => true do |t|
+    #   t.column :name, :string
+    # end
+    # 
+    # create_table :groups_privileges, :force => true do |t|
+    #   t.column :group_id, :integer
+    #   t.column :privilege_id, :integer
+    # end
+    # 
+    # create_table :users, :force => true do |t|
+    #   t.column :username, :string
+    #   t.column :password_hash, :string
+    #   t.column :group_id, :integer
+    #   t.column :email_address, :string
+    #   t.column :active, :boolean
+    # end
+    #   
+    # create_table :user_reminders, :force => true do |t|
+    #   t.column :user_id, :integer
+    #   t.column :token, :string
+    #   t.column :expires_at, :datetime
+    # end    
   end
 end
 
 # ActiveRecord models
 class DefaultActiveRecordModel < ActiveRecord::Base
+end
+
+class LWTAuthenticationSystemModel < ActiveRecord::Base
+  acts_as_login_model
 end
 
 

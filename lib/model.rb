@@ -43,8 +43,8 @@ module LWT
         # - :use_salt - If true, the hash_password method will be sent a salt along with a
         #   password. The salt will be stored in database column salt. Defaults: false
         def acts_as_login_model options = {}
-          include LWT::AuthenticationSystem::Model::InstanceMethods
           extend LWT::AuthenticationSystem::Model::SingletonMethods
+          include LWT::AuthenticationSystem::Model::InstanceMethods
 
           self.lwt_authentication_system_options = {
             :group_validation => "can't be blank",
@@ -138,6 +138,8 @@ module LWT
       end
 
       module InstanceMethods
+        attr_reader :password, :password_confirmation
+        
         # Sets the users password. This will be ignored if the value is blank.
         # This value is cleared out in an after_validate callback. If there
         # were not errors on the password attribute, then password_hash will be
@@ -151,9 +153,6 @@ module LWT
         def password_confirmation=( password )
           @password_confirmation = password.blank? ? nil : password
         end
-        
-        def password; end
-        def password_confirmation; end
 
         # This method determines if this user has any of the passed in privileges.
         # The the arguments are expected to be symbols.
