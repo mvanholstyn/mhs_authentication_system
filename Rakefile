@@ -1,15 +1,14 @@
 require 'rake'
-require 'rake/testtask'
 require 'rake/rdoctask'
+require 'spec/rake/spectask'
 
-desc 'Default: run unit tests.'
-task :default => :test
+desc 'Default: run specs.'
+task :default => :spec
 
-desc 'Test the lwt_authentication_system plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
+desc 'Run specs for the lwt_authentication_system plugin.'
+Spec::Rake::SpecTask.new(:spec) do |t|
+  t.spec_opts = ['--options', %Q{#{File.join(File.dirname(__FILE__), '../../../spec/spec.opts')}}]
+  t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 desc 'Generate documentation for the lwt_authentication_system plugin.'

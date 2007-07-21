@@ -84,10 +84,13 @@ describe LWTAuthenticationSystemModel, "hash_password" do
   end
   
   it "hash_password sets hash_password method when passed a block" do
-    old_hash_password_method = LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password]
+    original_hash_password_method = LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password]
     LWTAuthenticationSystemModel.hash_password { |p| p }
-    LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password].should_not == old_hash_password_method
+    LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password].should_not == original_hash_password_method
     LWTAuthenticationSystemModel.hash_password("password").should == "password"
+    
+    # Reset original hash_password method
+    LWTAuthenticationSystemModel.hash_password &original_hash_password_method
   end
 end
 
