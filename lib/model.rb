@@ -138,7 +138,8 @@ module LWT
       end
 
       module InstanceMethods
-        attr_reader :password, :password_confirmation
+        def password; end
+        def password_confirmation; end
         
         # Sets the users password. This will be ignored if the value is blank.
         # This value is cleared out in an after_validate callback. If there
