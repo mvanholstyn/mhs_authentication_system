@@ -155,14 +155,16 @@ module LWT
           @password_confirmation = password.blank? ? nil : password
         end
 
-        # This method determines if this user has any of the passed in privileges.
-        # The the arguments are expected to be symbols.
-        def has_privilege? *privs
+        # This method returns true if this user has ANY of the passed in privileges.
+        #
+        # Valid options:
+        # - :match_all - If set to true, returns true if this user has ALL of the 
+        #   passed in privileges. Default: false
+        def has_privilege? *requested_privileges
           return false unless group
-          group.privileges.each do |priv|
-            return true if privs.include? priv.name.to_sym
-          end
-          false
+          options = requested_privileges.last.is_a?(Hash) ? requested_privileges.pop : {}
+          matched_privileges = requested_privileges.map(&:to_s) & group.privileges.map(&:name)
+          options[:match_all] ? matched_privileges.size == requested_privileges.size : !matched_privileges.empty?
         end
       end
     end
