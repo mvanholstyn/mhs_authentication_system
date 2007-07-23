@@ -209,8 +209,9 @@ module LWT
 
       module SignupInstanceMethods
         def signup
-          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym].merge(:active => false) ) )
+          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
           if request.post?
+            model.active = false
             if model.save
               reminder = UserReminder.create_for_user( model, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
               url = url_for(:action => 'login', :id => model, :token => reminder.token)
