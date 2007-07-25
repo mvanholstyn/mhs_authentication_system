@@ -109,11 +109,15 @@ describe LWTAuthenticationSystemModel, "login" do
     model = LWTAuthenticationSystemModel.login :username => "username", :password => "wrong password"
     model.should be_nil
   end
-  
-  
+
   it "login with valid username and password returns the model" do
     model = LWTAuthenticationSystemModel.login :username => "username", :password => "password"
     model.should == @model
+  end
+  
+  it "login with nil returns nil" do
+    model = LWTAuthenticationSystemModel.login nil
+    model.should be_nil
   end
 end
 

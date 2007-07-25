@@ -115,6 +115,7 @@ module LWT
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
         def login params
+          return nil if not params
           password = params.delete( :password )
           user = self.find :first, :conditions => params, :include => { :group => :privileges }
           return nil unless user
