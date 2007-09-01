@@ -3,11 +3,15 @@ require 'fileutils'
 plugin_spec_directory = File.expand_path(File.dirname(__FILE__))
 
 # Lets load up a rails environment
-unless defined?(RAILS_ROOT)
- RAILS_ROOT = ENV["RAILS_ROOT"] || File.join(plugin_spec_directory, "../../../..")
-end
-require File.join(RAILS_ROOT, "spec", "spec_helper")
-# require File.join(File.dirname(__FILE__), "..", "init")
+# unless defined?(RAILS_ROOT)
+#  RAILS_ROOT = ENV["RAILS_ROOT"] || File.join(plugin_spec_directory, "../../../..")
+# end
+# require File.join(RAILS_ROOT, "spec", "spec_helper")
+$:.unshift File.join(plugin_spec_directory, "../../../../vendor/rails")
+require 'action_controller'
+require 'active_record'
+require 'action_mailer'
+require File.join(plugin_spec_directory, "../init")
 
 # Setup up routes for our tests
 ActionController::Routing::Routes.clear!
@@ -26,25 +30,27 @@ ActiveRecord::Schema.suppress_messages do
     end
     
     create_table :lwt_authentication_system_models, :force => true do |t|
-      t.column :username, :string
       t.column :password_hash, :string
-      t.column :group_id, :integer
+      t.column :salt, :string
       t.column :email_address, :string
+      t.column :group_id, :integer
       t.column :active, :boolean
+      t.column :remember_me_token, :string
+      t.column :remember_me_token_expires_at, :datetime
     end
     
-    # create_table :groups, :force => true do |t|
-    #   t.column :name, :string
-    # end
-    # 
-    # create_table :privileges, :force => true do |t|
-    #   t.column :name, :string
-    # end
-    # 
-    # create_table :groups_privileges, :force => true do |t|
-    #   t.column :group_id, :integer
-    #   t.column :privilege_id, :integer
-    # end
+    create_table :groups, :force => true do |t|
+      t.column :name, :string
+    end
+    
+    create_table :privileges, :force => true do |t|
+      t.column :name, :string
+    end
+    
+    create_table :groups_privileges, :force => true do |t|
+      t.column :group_id, :integer
+      t.column :privilege_id, :integer
+    end
     # 
     # create_table :users, :force => true do |t|
     #   t.column :username, :string

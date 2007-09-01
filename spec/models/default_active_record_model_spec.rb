@@ -1,4 +1,4 @@
-require File.join( File.dirname( __FILE__ ), '../spec_helper' )
+require File.join(File.dirname( __FILE__ ), '../spec_helper')
 
 describe DefaultActiveRecordModel, "responds to methods added by LWT::AuthenticationSystem::Model::ClassMethods" do
   it "responds to acts_as_login_model" do
@@ -49,14 +49,18 @@ describe DefaultActiveRecordModel, "instance does not respond to methods added b
   it "does not respond to has_privilege?" do
     DefaultActiveRecordModel.new.should_not respond_to(:has_privilege?)
   end
+  
+  it "does not respond to remember_me!" do
+    DefaultActiveRecordModel.new.should_not respond_to(:remember_me!)
+  end
+  
+  it "does not respond to forget_me!" do
+    DefaultActiveRecordModel.new.should_not respond_to(:forget_me!)
+  end
 end
 
 describe DefaultActiveRecordModel, "does not respond to methods added by database schema" do
-  
-  it "does not respond to username" do
-    DefaultActiveRecordModel.new.should_not respond_to(:username)
-  end
-  
+    
   it "does not respond to password_hash" do
     DefaultActiveRecordModel.new.should_not respond_to(:password_hash)
   end
@@ -71,5 +75,17 @@ describe DefaultActiveRecordModel, "does not respond to methods added by databas
   
   it "does not respond to active" do
     DefaultActiveRecordModel.new.should_not respond_to(:active)
+  end
+  
+  it "does not respond to salt" do
+    DefaultActiveRecordModel.new.should_not respond_to(:salt)
+  end
+  
+  it "does not respond to remember_me_token" do
+    DefaultActiveRecordModel.new.should_not respond_to(:remember_me_token)
+  end
+  
+  it "does not respond to remember_me_token_expires_at" do
+    DefaultActiveRecordModel.new.should_not respond_to(:remember_me_token_expires_at)
   end
 end

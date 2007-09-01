@@ -49,13 +49,17 @@ describe LWTAuthenticationSystemModel, "instance responds to methods added by LW
   it "responds to has_privilege?" do
     LWTAuthenticationSystemModel.new.should respond_to(:has_privilege?)
   end
+  
+  it "responds to remember_me!" do
+    LWTAuthenticationSystemModel.new.should respond_to(:remember_me!)
+  end
+  
+  it "responds to forget_me!" do
+    LWTAuthenticationSystemModel.new.should respond_to(:forget_me!)
+  end
 end
 
 describe LWTAuthenticationSystemModel, "responds to methods added by database schema" do
-  
-  it "responds to username" do
-    LWTAuthenticationSystemModel.new.should respond_to(:username)
-  end
   
   it "responds to password_hash" do
     LWTAuthenticationSystemModel.new.should respond_to(:password_hash)
@@ -72,6 +76,18 @@ describe LWTAuthenticationSystemModel, "responds to methods added by database sc
   it "responds to active" do
     LWTAuthenticationSystemModel.new.should respond_to(:active)
   end
+  
+  it "responds to salt" do
+    LWTAuthenticationSystemModel.new.should respond_to(:salt)
+  end
+  
+  it "responds to remember_me_token" do
+    LWTAuthenticationSystemModel.new.should respond_to(:remember_me_token)
+  end
+  
+  it "responds to remember_me_token_expires_at" do
+    LWTAuthenticationSystemModel.new.should respond_to(:remember_me_token_expires_at)
+  end
 end
 
 describe LWTAuthenticationSystemModel, "acts_as_login_model" do
@@ -79,8 +95,8 @@ describe LWTAuthenticationSystemModel, "acts_as_login_model" do
 end
 
 describe LWTAuthenticationSystemModel, "hash_password" do
-  it "hash_password returns MD5 hash of passed in string" do
-    LWTAuthenticationSystemModel.hash_password("password").should == "5f4dcc3b5aa765d61d8327deb882cf99"
+  it "hash_password returns SHA1 hash of password and salt" do
+    LWTAuthenticationSystemModel.hash_password("password", "salt").should == "81c35bdfd7b6bc8878248ae59671c396aa519764"
   end
   
   it "hash_password sets hash_password method when passed a block" do
@@ -95,28 +111,33 @@ describe LWTAuthenticationSystemModel, "hash_password" do
 end
 
 describe LWTAuthenticationSystemModel, "login" do
-  before(:each) do
-    @model = LWTAuthenticationSystemModel.new :username => "username", :password => "password", :password_confirmation => "password"
+  before(:all) do
+    @model = LWTAuthenticationSystemModel.new :email_address => "user@example.com", :password => "password", :password_confirmation => "password"
     @model.save_without_validation
   end
   
-  it "login with invalid username returns nil" do
-    model = LWTAuthenticationSystemModel.login :username => "wrong username", :password => "password"
+  it "with invalid email_address returns nil" do
+    model = LWTAuthenticationSystemModel.login :email_address => "wrong_user@example.com", :password => "password"
     model.should be_nil
   end
   
-  it "login with invalid password returns nil" do
-    model = LWTAuthenticationSystemModel.login :username => "username", :password => "wrong password"
+  it "with invalid password returns nil" do
+    model = LWTAuthenticationSystemModel.login :email_address => "user@example.com", :password => "wrong password"
     model.should be_nil
   end
 
-  it "login with valid username and password returns the model" do
-    model = LWTAuthenticationSystemModel.login :username => "username", :password => "password"
+  it "with valid email_address and password returns the model" do
+    model = LWTAuthenticationSystemModel.login :email_address => "user@example.com", :password => "password"
     model.should == @model
   end
   
-  it "login with nil returns nil" do
+  it "with nil returns nil" do
     model = LWTAuthenticationSystemModel.login nil
+    model.should be_nil
+  end
+  
+  it "with empty hash returns nil" do
+    model = LWTAuthenticationSystemModel.login({})
     model.should be_nil
   end
 end
@@ -180,31 +201,31 @@ describe LWTAuthenticationSystemModel, "has_privilege?" do
     @model = LWTAuthenticationSystemModel.new :group => group
   end
 
-  it "has_privilege? returns false if user does not have a group" do
+  it "returns false if user does not have a group" do
     LWTAuthenticationSystemModel.new.has_privilege?(:admin).should be_false
   end
 
-  it "has_privilege? returns false if user does not have the specified privilege" do
+  it "returns false if user does not have the specified privilege" do
     @model.has_privilege?(:blogger).should be_false
   end
 
-  it "has_privilege? returns false if user does not have the specified privileges" do
+  it "returns false if user does not have any the specified privileges" do
     @model.has_privilege?(:blogger, :commenter).should be_false
   end
 
-  it "has_privilege? returns true if user has the specified privilege" do
+  it "returns true if user has the specified privilege" do
     @model.has_privilege?(:admin).should be_true
   end
 
-  it "has_privilege? returns true if user has any of the specified privileges" do
+  it "returns true if user has any of the specified privileges" do
     @model.has_privilege?(:admin, :blogger).should be_true
   end
 
-  it "has_privilege? returns false if user does not have all of the specified privileges when match_all is true" do
+  it "returns false if user does not have all of the specified privileges when match_all is true" do
     @model.has_privilege?(:admin, :blogger, :match_all => true).should be_false
   end
 
-  it "has_privilege? returns true if user has all of the specified privileges when match_all is true" do
+  it "returns true if user has all of the specified privileges when match_all is true" do
     @model.has_privilege?(:admin, :super_admin, :match_all => true).should be_true
   end
 end
