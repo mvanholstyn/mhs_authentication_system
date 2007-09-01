@@ -108,12 +108,19 @@ module LWT
         
         def find_and_set_current_user
           if session[:current_user_id]
-            set_current_user self.class.login_model.find( session[:current_user_id], :include => { :group => :privileges } )
-          else
-            user = authenticate_with_http_basic do |l, p| 
-              self.class.login_model.login( self.class.login_model.lwt_authentication_system_options[:login_attribute] => l, :password => p )
+            set_current_user self.class.login_model.find(session[:current_user_id], :include => {:group => :privileges })
+          elsif cookies[:remember_me_token]
+            model = self.class.login_model.find(:first, :conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now], :include => {:group => :privileges })
+            if model
+              model.remember_me!
+              cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
             end
-            set_current_user user
+            set_current_user model 
+          else
+            model = authenticate_with_http_basic do |email_address, password| 
+              self.class.login_model.login(:email_address => email_address, :password => password)
+            end
+            set_current_user model
           end
         end
       end

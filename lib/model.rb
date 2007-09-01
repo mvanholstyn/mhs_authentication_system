@@ -10,8 +10,6 @@ module LWT
       module ClassMethods
         # Sets up this model as a login model. The following thigs are done:
         # * belongs_to :group
-        # * validates_presence_of options[:login_attribute] (not used if options[:login_attribute] is :email_address)
-        # * validates_uniqueness_of options[:login_attribute] (not used if options[:login_attribute] is :email_address)
         # * validates_presence_of :email_address
         # * validates_uniqueness_of :email_address
         # * sets up validation to check that password and password_confirmation
@@ -26,22 +24,12 @@ module LWT
         # - :password_validation - Error message used when the passwords do not match.
         #   If this check is not desired, set this to false or nil.
         #   Default: "must match"
-        # - :login_validation - Error message used when the options[:login_attribute] is blank.
-        #   If this check is not desired, set this to false or nil.
-        #   Default: "can't be blank"
-        # - :login_unique_validation - Error message used when the options[:login_attribute] is
-        #   already in use. If this check is not desired, set to false or nil.
-        #   Default: "has already been taken"
         # - :email_address_validation - Error message used when the email_address is blank.
         #   If this check is not desired, set this to false or nil.
         #   Default: "can't be blank"
         # - :email_address_unique_validation - Error message used when the email_address is
         #   already in use. If this check is not desired, set to false or nil.
         #   Default: "has already been taken"
-        # - :login_attribute - The attribute to use to uniquely identify each user.
-        #   Default: :username
-        # - :use_salt - If true, the hash_password method will be sent a salt along with a
-        #   password. The salt will be stored in database column salt. Defaults: false
         def acts_as_login_model options = {}
           extend LWT::AuthenticationSystem::Model::SingletonMethods
           include LWT::AuthenticationSystem::Model::InstanceMethods
@@ -49,33 +37,19 @@ module LWT
           self.lwt_authentication_system_options = {
             :group_validation => "can't be blank",
             :password_validation => "must match",
-            :login_validation => "can't be blank",
-            :login_unique_validation => "has already been taken",
             :email_address_validation => "can't be blank",
-            :email_address_unique_validation => "has already been taken",
-            :login_attribute => :username,
-            :use_salt => false
+            :email_address_unique_validation => "has already been taken"
           }.merge( options )
 
           hash_password do |password, salt|
-            require 'md5'
-            MD5.hexdigest( password )
+            require 'digest/sha1'
+            Digest::SHA1.hexdigest("--#{salt}--#{password}--")
           end
 
           belongs_to :group
 
           if msg = lwt_authentication_system_options[:group_validation]
             validates_presence_of :group_id, :message => msg
-          end
-
-          if lwt_authentication_system_options[:login_attribute] != :email_address
-            if msg = lwt_authentication_system_options[:login_validation]
-              validates_presence_of lwt_authentication_system_options[:login_attribute], :message => msg
-            end
-
-            if msg = lwt_authentication_system_options[:login_unique_validation]
-              validates_uniqueness_of lwt_authentication_system_options[:login_attribute], :message => msg, :allow_nil => true
-            end
           end
 
           if msg = lwt_authentication_system_options[:email_address_validation]
@@ -100,12 +74,10 @@ module LWT
           
           before_save do |user|
             if user.instance_variable_get( "@password" )
-              args = [ user.instance_variable_get( "@password" ) ]
-              args << user.salt if self.lwt_authentication_system_options[:use_salt]
-              user.password_hash = self.hash_password( *args )
+              user.salt ||= Digest::SHA1.hexdigest("--#{Time.now}--#{user.email_address}--")
+              user.password_hash = self.hash_password( user.instance_variable_get( "@password" ), user.salt )
             end
           end
-          
         end
       end
 
@@ -115,15 +87,9 @@ module LWT
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
         def login params
-          return nil if not params
-          
-          password = params.delete( :password )
-          user = self.find :first, :conditions => params, :include => { :group => :privileges }
-          return nil unless user
-
-          args = [ password ]
-          args << user.salt if self.lwt_authentication_system_options[:use_salt]
-          self.hash_password( *args ) == user.password_hash ? user : nil
+          if not params.blank? and user = self.find_by_email_address(params[:email_address], :include => {:group => :privileges})
+            self.hash_password(params[:password], user.salt) == user.password_hash ? user : nil
+          end
         end
 
         # This method does two things:
@@ -140,6 +106,19 @@ module LWT
       end
 
       module InstanceMethods
+        
+        def forget_me!
+          self.remember_me_token_expires_at = nil
+          self.remember_me_token = nil
+          save_without_validation
+        end
+        
+        def remember_me!
+          self.remember_me_token_expires_at = 2.weeks.from_now
+          self.remember_me_token = self.class.  hash_password("--#{email_address}--#{remember_me_token_expires_at}--")
+          save_without_validation
+        end
+        
         def password; end
         def password_confirmation; end
         

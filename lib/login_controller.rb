@@ -116,6 +116,10 @@ module LWT
             instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.login( params[self.class.login_model_name.to_sym] ) )
             if model
               if model.active?
+                if not params[:remember_me].blank?
+                  model.remember_me! 
+                  cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
+                end
                 set_current_user model
                 do_redirect_after_login
                 return
@@ -143,6 +147,8 @@ module LWT
         # The logout action resets the session and rediects the user to
         # the page defined in redirect_after_logout.
         def logout
+          current_user.forget_me!
+          cookies.delete(:remember_me_token)
           set_current_user nil
           redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_logout] )
         end
