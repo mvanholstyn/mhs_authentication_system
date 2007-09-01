@@ -1,7 +1,7 @@
 <% form_for :user do |form| -%>
 	<p>
-  	<b>Username</b><br />
-		<%= form.text_field :username %>
+  	<b>Email Address</b><br />
+		<%= form.text_field :email_address %>
   </p>
 
 	<p>
@@ -10,9 +10,14 @@
   </p>
 
 	<p>
+		<%= check_box_tag :remember_me %>
+  	<b>Remember Me</b>
+  </p>
+
+	<p>
   	<%= form.submit 'Login' %>
 	</p>
 <% end -%>
 
-<%= link_to "Forgot your username or password?", :action => "reminder" %> |
-<%= link_to "Need an account?", :action => "signup" %>
+<%= link_to "Forgot your username or password?", reminder_path %> |
+<%= link_to "Need an account?", signup_path %>

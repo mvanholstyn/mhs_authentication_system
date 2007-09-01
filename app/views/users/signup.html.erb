@@ -2,11 +2,6 @@
 
 <% form_for :user do |form| -%>
 	<p>
-  	<b>Username</b><br />
-		<%= form.text_field :username %>
-  </p>
-
-	<p>
   	<b>Email Address</b><br />
 		<%= form.text_field :email_address %>
   </p>
@@ -26,4 +21,4 @@
 	</p>
 <% end -%>
 
-<%= link_to "Login", :action => "login" %>
+<%= link_to "Login", login_path %>
