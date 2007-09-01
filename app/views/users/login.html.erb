@@ -1,0 +1,18 @@
+<% form_for :user do |form| -%>
+	<p>
+  	<b>Username</b><br />
+		<%= form.text_field :username %>
+  </p>
+
+	<p>
+  	<b>Password</b><br />
+		<%= form.password_field :password %>
+  </p>
+
+	<p>
+  	<%= form.submit 'Login' %>
+	</p>
+<% end -%>
+
+<%= link_to "Forgot your username or password?", :action => "reminder" %> |
+<%= link_to "Need an account?", :action => "signup" %>
