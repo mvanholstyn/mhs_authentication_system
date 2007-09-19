@@ -12,6 +12,8 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.integer :group_id
       t.integer :privilege_id
     end
+    add_index :groups_privileges, :group_id
+    add_index :groups_privileges, :privilege_id
 
     create_table :users do |t|
       t.string :password_hash
@@ -22,12 +24,14 @@ class AddLwtAuthenticationSystem < ActiveRecord::Migration
       t.string :remember_me_token
       t.datetime :remember_me_token_expires_at
     end
+    add_index :users, :group_id
     
     create_table :user_reminders do |t|
       t.integer :user_id
       t.string :token
       t.datetime :expires_at
     end
+    add_index :user_reminders, :user_id
   end
 
   def self.down
