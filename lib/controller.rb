@@ -20,8 +20,10 @@ module LWT
         end
 
         base.on_permission_denied do
-          render :text => "You do not have the proper privileges to access this page.", :status => 401
-          false
+          respond_to do |wants|
+            wants.html { render :text => "You do not have the proper privileges to access this page.", :status => :unauthorized }
+            wants.any { head :unauthorized }
+          end
         end
         
         base.on_permission_granted do
@@ -45,6 +47,7 @@ module LWT
               c.instance_eval &c.class.permission_granted
             else
               c.instance_eval &c.class.permission_denied
+              false
             end
           end
         end
@@ -116,11 +119,20 @@ module LWT
               cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
             end
             set_current_user model 
-          else
-            model = authenticate_with_http_basic do |email_address, password| 
+          elsif not ActionController::HttpAuthentication::Basic.authorization(request).blank?
+            model = authenticate_with_http_basic do |email_address, password|
               self.class.login_model.login(:email_address => email_address, :password => password)
             end
-            set_current_user model
+            
+            if model
+              set_current_user model
+            else
+              set_current_user nil
+              instance_eval &self.class.permission_denied
+              false
+            end
+          else
+            set_current_user nil
           end
         end
       end
