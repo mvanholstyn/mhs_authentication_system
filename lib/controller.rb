@@ -16,7 +16,6 @@ module LWT
 
         base.on_not_logged_in do
           redirect_to :controller => self.class.login_controller_name.gsub( /_controller$/, '' ), :action => 'login'
-          false
         end
 
         base.on_permission_denied do
@@ -47,7 +46,6 @@ module LWT
               c.instance_eval &c.class.permission_granted
             else
               c.instance_eval &c.class.permission_denied
-              false
             end
           end
         end
@@ -129,7 +127,6 @@ module LWT
             else
               set_current_user nil
               instance_eval &self.class.permission_denied
-              false
             end
           else
             set_current_user nil
