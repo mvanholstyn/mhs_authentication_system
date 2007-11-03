@@ -52,6 +52,7 @@ module LWT
           end
 
           redirect_after_signup do
+            puts "*"*80
             { :action => 'login' }
           end
         end
@@ -218,6 +219,7 @@ module LWT
           instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
           if request.post?
             model.active = false
+            
             if model.save
               reminder = UserReminder.create_for_user( model, Time.now + self.class.lwt_authentication_system_options[:reminder_login_duration] )
               url = url_for(:action => 'login', :id => model, :token => reminder.token)
@@ -225,6 +227,7 @@ module LWT
                 :from => self.class.lwt_authentication_system_options[:email_from], 
                 :subject => self.class.lwt_authentication_system_options[:signup_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
+              set_current_user model
               redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_signup] )
             end
           else
