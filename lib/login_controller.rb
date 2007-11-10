@@ -46,6 +46,9 @@ module LWT
           if lwt_authentication_system_options[:allow_signup]
             include LWT::AuthenticationSystem::LoginController::SignupInstanceMethods
           end
+          
+          after_successful_signup do ; end
+          after_failed_signup do ; end
 
           redirect_after_logout do
             { :action => 'login' }
@@ -72,7 +75,7 @@ module LWT
           
           super( *privileges, &blk )
         end
-
+        
         # Sets the arguments to be passed to redirect_to after a user
         # successfully logs in. The block will be evaluated in the scope
         # of the controller.
@@ -92,6 +95,14 @@ module LWT
         # of the controller.
         def redirect_after_logout &blk
           self.lwt_authentication_system_options[:redirect_after_logout] = blk
+        end
+
+        def after_successful_signup &blk
+          self.lwt_authentication_system_options[:after_successful_signup] = blk
+        end
+        
+        def after_failed_signup &blk
+          self.lwt_authentication_system_options[:after_failed_signup] = blk
         end
 
         # Sets the arguments to be passed to redirect_to after a user
@@ -225,7 +236,10 @@ module LWT
                 :from => self.class.lwt_authentication_system_options[:email_from], 
                 :subject => self.class.lwt_authentication_system_options[:signup_email_subject] )
               flash[:notice] = self.class.lwt_authentication_system_options[:successful_signup_flash]
+              instance_eval &self.class.lwt_authentication_system_options[:after_successful_signup]
               redirect_to self.instance_eval( &self.class.lwt_authentication_system_options[:redirect_after_signup] )
+            else
+              instance_eval &self.class.lwt_authentication_system_options[:after_failed_signup]              
             end
           else
             flash[:notice] = self.class.lwt_authentication_system_options[:signup_flash]
