@@ -1,18 +1,18 @@
 require File.join(File.dirname( __FILE__ ), '../spec_helper')
 
-describe DefaultActiveRecordModel, "responds to methods added by LWT::AuthenticationSystem::Model::ClassMethods" do
+describe DefaultActiveRecordModel, "responds to methods added by Mhs::AuthenticationSystem::Model::ClassMethods" do
   it "responds to acts_as_login_model" do
     DefaultActiveRecordModel.should respond_to(:acts_as_login_model)
   end
 end
 
-describe DefaultActiveRecordModel, "does not respond to methods added by LWT::AuthenticationSystem::Model::SingletonMethods" do
+describe DefaultActiveRecordModel, "does not respond to methods added by Mhs::AuthenticationSystem::Model::SingletonMethods" do
   it "does not respond to current_user" do
     DefaultActiveRecordModel.should_not respond_to(:current_user)
   end
   
-  it "does not respond to lwt_authentication_system_options" do
-    DefaultActiveRecordModel.should_not respond_to(:lwt_authentication_system_options)
+  it "does not respond to mhs_authentication_system_options" do
+    DefaultActiveRecordModel.should_not respond_to(:mhs_authentication_system_options)
   end
   
   it "does not respond to login" do
@@ -25,7 +25,7 @@ describe DefaultActiveRecordModel, "does not respond to methods added by LWT::Au
 end
 
 
-describe DefaultActiveRecordModel, "instance does not respond to methods added by LWT::AuthenticationSystem::Model::InstanceMethods" do
+describe DefaultActiveRecordModel, "instance does not respond to methods added by Mhs::AuthenticationSystem::Model::InstanceMethods" do
   it "does not respond to group=" do
     DefaultActiveRecordModel.new.should_not respond_to(:group=)
   end

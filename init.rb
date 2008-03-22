@@ -8,6 +8,6 @@ require File.join( dir, 'privilege_model' )
 require File.join( dir, 'group_privilege_model' )
 require File.join( dir, 'user_reminder_model' )
 require File.join( dir, 'user_reminder_mailer_model' )
-ActiveRecord::Base.send :include, LWT::AuthenticationSystem::Model
-ActionController::Base.send :include, LWT::AuthenticationSystem::Controller
-ActionController::Base.send :include, LWT::AuthenticationSystem::LoginController
+ActiveRecord::Base.send :include, Mhs::AuthenticationSystem::Model
+ActionController::Base.send :include, Mhs::AuthenticationSystem::Controller
+ActionController::Base.send :include, Mhs::AuthenticationSystem::LoginController

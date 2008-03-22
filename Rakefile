@@ -5,16 +5,16 @@ require 'spec/rake/spectask'
 desc 'Default: run specs.'
 task :default => :spec
 
-desc 'Run specs for the lwt_authentication_system plugin.'
+desc 'Run specs for the mhs_authentication_system plugin.'
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_opts = ['--options', %Q{#{File.join(File.dirname(__FILE__), '../../../spec/spec.opts')}}]
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-desc 'Generate documentation for the lwt_authentication_system plugin.'
+desc 'Generate documentation for the mhs_authentication_system plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'LwtAuthenticationSystem'
+  rdoc.title    = 'MhsAuthenticationSystem'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')

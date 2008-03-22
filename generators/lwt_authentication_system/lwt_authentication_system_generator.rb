@@ -1,4 +1,4 @@
-class LwtAuthenticationSystemGenerator < Rails::Generator::Base
+class MhsAuthenticationSystemGenerator < Rails::Generator::Base
 
   #TODO: update classes of they exists?
   #TODO: Add routes?
@@ -23,7 +23,7 @@ class LwtAuthenticationSystemGenerator < Rails::Generator::Base
       m.template 'spec/fixtures/groups_privileges.yml', File.join( *%w{ spec fixtures groups_privileges.yml } )
       m.template 'spec/fixtures/privileges.yml', File.join( *%w{ spec fixtures privileges.yml } )
       m.template 'spec/fixtures/users.yml', File.join( *%w{ spec fixtures users.yml } )
-      m.migration_template 'db/migrate/migration.rb', File.join( *%w{ db migrate } ), :migration_file_name => "add_lwt_authentication_system"
+      m.migration_template 'db/migrate/migration.rb', File.join( *%w{ db migrate } ), :migration_file_name => "add_mhs_authentication_system"
     end
   end
 end

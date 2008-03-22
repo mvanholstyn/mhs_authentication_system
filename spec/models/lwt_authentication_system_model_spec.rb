@@ -1,150 +1,150 @@
 require File.join( File.dirname( __FILE__ ), '../spec_helper' )
 
-describe LWTAuthenticationSystemModel, "responds to methods added by LWT::AuthenticationSystem::Model::ClassMethods" do
+describe MhsAuthenticationSystemModel, "responds to methods added by Mhs::AuthenticationSystem::Model::ClassMethods" do
   it "responds to acts_as_login_model" do
-    LWTAuthenticationSystemModel.should respond_to(:acts_as_login_model)
+    MhsAuthenticationSystemModel.should respond_to(:acts_as_login_model)
   end
 end
 
-describe LWTAuthenticationSystemModel, "responds to methods added by LWT::AuthenticationSystem::Model::SingletonMethods" do
+describe MhsAuthenticationSystemModel, "responds to methods added by Mhs::AuthenticationSystem::Model::SingletonMethods" do
   it "responds to current_user" do
-    LWTAuthenticationSystemModel.should respond_to(:current_user)
+    MhsAuthenticationSystemModel.should respond_to(:current_user)
   end
   
-  it "responds to lwt_authentication_system_options" do
-    LWTAuthenticationSystemModel.should respond_to(:lwt_authentication_system_options)
+  it "responds to mhs_authentication_system_options" do
+    MhsAuthenticationSystemModel.should respond_to(:mhs_authentication_system_options)
   end
   
   it "responds to login" do
-    LWTAuthenticationSystemModel.should respond_to(:login)
+    MhsAuthenticationSystemModel.should respond_to(:login)
   end
   
   it "responds to hash_password" do
-    LWTAuthenticationSystemModel.should respond_to(:hash_password)
+    MhsAuthenticationSystemModel.should respond_to(:hash_password)
   end
 end
 
 
-describe LWTAuthenticationSystemModel, "instance responds to methods added by LWT::AuthenticationSystem::Model::InstanceMethods" do
+describe MhsAuthenticationSystemModel, "instance responds to methods added by Mhs::AuthenticationSystem::Model::InstanceMethods" do
   it "responds to group=" do
-    LWTAuthenticationSystemModel.new.should respond_to(:group=)
+    MhsAuthenticationSystemModel.new.should respond_to(:group=)
   end
 
   it "responds to password" do
-    LWTAuthenticationSystemModel.new.should respond_to(:password)
+    MhsAuthenticationSystemModel.new.should respond_to(:password)
   end
   
   it "responds to password_confirmation" do
-    LWTAuthenticationSystemModel.new.should respond_to(:password_confirmation)
+    MhsAuthenticationSystemModel.new.should respond_to(:password_confirmation)
   end
 
   it "responds to password=" do
-    LWTAuthenticationSystemModel.new.should respond_to(:password=)
+    MhsAuthenticationSystemModel.new.should respond_to(:password=)
   end
   
   it "responds to password_confirmation=" do
-    LWTAuthenticationSystemModel.new.should respond_to(:password_confirmation=)
+    MhsAuthenticationSystemModel.new.should respond_to(:password_confirmation=)
   end
   
   it "responds to has_privilege?" do
-    LWTAuthenticationSystemModel.new.should respond_to(:has_privilege?)
+    MhsAuthenticationSystemModel.new.should respond_to(:has_privilege?)
   end
   
   it "responds to remember_me!" do
-    LWTAuthenticationSystemModel.new.should respond_to(:remember_me!)
+    MhsAuthenticationSystemModel.new.should respond_to(:remember_me!)
   end
   
   it "responds to forget_me!" do
-    LWTAuthenticationSystemModel.new.should respond_to(:forget_me!)
+    MhsAuthenticationSystemModel.new.should respond_to(:forget_me!)
   end
 end
 
-describe LWTAuthenticationSystemModel, "responds to methods added by database schema" do
+describe MhsAuthenticationSystemModel, "responds to methods added by database schema" do
   
   it "responds to password_hash" do
-    LWTAuthenticationSystemModel.new.should respond_to(:password_hash)
+    MhsAuthenticationSystemModel.new.should respond_to(:password_hash)
   end
   
   it "responds to group_id" do
-    LWTAuthenticationSystemModel.new.should respond_to(:group_id)
+    MhsAuthenticationSystemModel.new.should respond_to(:group_id)
   end
   
   it "responds to email_address" do
-    LWTAuthenticationSystemModel.new.should respond_to(:email_address)
+    MhsAuthenticationSystemModel.new.should respond_to(:email_address)
   end
   
   it "responds to active" do
-    LWTAuthenticationSystemModel.new.should respond_to(:active)
+    MhsAuthenticationSystemModel.new.should respond_to(:active)
   end
   
   it "responds to salt" do
-    LWTAuthenticationSystemModel.new.should respond_to(:salt)
+    MhsAuthenticationSystemModel.new.should respond_to(:salt)
   end
   
   it "responds to remember_me_token" do
-    LWTAuthenticationSystemModel.new.should respond_to(:remember_me_token)
+    MhsAuthenticationSystemModel.new.should respond_to(:remember_me_token)
   end
   
   it "responds to remember_me_token_expires_at" do
-    LWTAuthenticationSystemModel.new.should respond_to(:remember_me_token_expires_at)
+    MhsAuthenticationSystemModel.new.should respond_to(:remember_me_token_expires_at)
   end
 end
 
-describe LWTAuthenticationSystemModel, "acts_as_login_model" do
+describe MhsAuthenticationSystemModel, "acts_as_login_model" do
   it "acts_as_login_model"
 end
 
-describe LWTAuthenticationSystemModel, "hash_password" do
+describe MhsAuthenticationSystemModel, "hash_password" do
   it "hash_password returns SHA1 hash of password and salt" do
-    LWTAuthenticationSystemModel.hash_password("password", "salt").should == "81c35bdfd7b6bc8878248ae59671c396aa519764"
+    MhsAuthenticationSystemModel.hash_password("password", "salt").should == "81c35bdfd7b6bc8878248ae59671c396aa519764"
   end
   
   it "hash_password sets hash_password method when passed a block" do
-    original_hash_password_method = LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password]
-    LWTAuthenticationSystemModel.hash_password { |p| p }
-    LWTAuthenticationSystemModel.lwt_authentication_system_options[:hash_password].should_not == original_hash_password_method
-    LWTAuthenticationSystemModel.hash_password("password").should == "password"
+    original_hash_password_method = MhsAuthenticationSystemModel.mhs_authentication_system_options[:hash_password]
+    MhsAuthenticationSystemModel.hash_password { |p| p }
+    MhsAuthenticationSystemModel.mhs_authentication_system_options[:hash_password].should_not == original_hash_password_method
+    MhsAuthenticationSystemModel.hash_password("password").should == "password"
     
     # Reset original hash_password method
-    LWTAuthenticationSystemModel.hash_password &original_hash_password_method
+    MhsAuthenticationSystemModel.hash_password &original_hash_password_method
   end
 end
 
-describe LWTAuthenticationSystemModel, "login" do
+describe MhsAuthenticationSystemModel, "login" do
   before(:all) do
-    @model = LWTAuthenticationSystemModel.new :email_address => "user@example.com", :password => "password", :password_confirmation => "password"
+    @model = MhsAuthenticationSystemModel.new :email_address => "user@example.com", :password => "password", :password_confirmation => "password"
     @model.save_without_validation
   end
   
   it "with invalid email_address returns nil" do
-    model = LWTAuthenticationSystemModel.login :email_address => "wrong_user@example.com", :password => "password"
+    model = MhsAuthenticationSystemModel.login :email_address => "wrong_user@example.com", :password => "password"
     model.should be_nil
   end
   
   it "with invalid password returns nil" do
-    model = LWTAuthenticationSystemModel.login :email_address => "user@example.com", :password => "wrong password"
+    model = MhsAuthenticationSystemModel.login :email_address => "user@example.com", :password => "wrong password"
     model.should be_nil
   end
 
   it "with valid email_address and password returns the model" do
-    model = LWTAuthenticationSystemModel.login :email_address => "user@example.com", :password => "password"
+    model = MhsAuthenticationSystemModel.login :email_address => "user@example.com", :password => "password"
     model.should == @model
   end
   
   it "with nil returns nil" do
-    model = LWTAuthenticationSystemModel.login nil
+    model = MhsAuthenticationSystemModel.login nil
     model.should be_nil
   end
   
   it "with empty hash returns nil" do
-    model = LWTAuthenticationSystemModel.login({})
+    model = MhsAuthenticationSystemModel.login({})
     model.should be_nil
   end
 end
 
-describe LWTAuthenticationSystemModel, "password/password_confirmation readers/writers" do
+describe MhsAuthenticationSystemModel, "password/password_confirmation readers/writers" do
   before(:each) do
-    @model = LWTAuthenticationSystemModel.new
+    @model = MhsAuthenticationSystemModel.new
   end
   
   it "password returns nil when @password is nil" do
@@ -192,17 +192,17 @@ describe LWTAuthenticationSystemModel, "password/password_confirmation readers/w
   end
 end
 
-describe LWTAuthenticationSystemModel, "has_privilege?" do
+describe MhsAuthenticationSystemModel, "has_privilege?" do
   before(:each) do
     group = Group.create! :name => "admin"
     admin_privilege = Privilege.create! :name => "admin"
     super_admin_privilege = Privilege.create! :name => "super_admin"
     group.privileges << admin_privilege << super_admin_privilege 
-    @model = LWTAuthenticationSystemModel.new :group => group
+    @model = MhsAuthenticationSystemModel.new :group => group
   end
 
   it "returns false if user does not have a group" do
-    LWTAuthenticationSystemModel.new.has_privilege?(:admin).should be_false
+    MhsAuthenticationSystemModel.new.has_privilege?(:admin).should be_false
   end
 
   it "returns false if user does not have the specified privilege" do

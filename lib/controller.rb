@@ -1,4 +1,4 @@
-module LWT
+module Mhs
   module AuthenticationSystem
     module Controller
 

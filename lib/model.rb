@@ -1,4 +1,4 @@
-module LWT
+module Mhs
   module AuthenticationSystem
     module Model
 
@@ -17,8 +17,8 @@ module LWT
         # * sets up after_validation callbacks to clear password and password_confirmation.
         #   If there were no errors on password, they password_hash will be set to the hash
         #   value of password
-        # * Adds methods from LWT::AuthenticationSystem::Model::InstanceMethods
-        # * Adds methods from LWT::AuthenticationSystem::Model::SingletonMethods
+        # * Adds methods from Mhs::AuthenticationSystem::Model::InstanceMethods
+        # * Adds methods from Mhs::AuthenticationSystem::Model::SingletonMethods
         #
         # Valid options:
         # - :password_validation - Error message used when the passwords do not match.
@@ -31,10 +31,10 @@ module LWT
         #   already in use. If this check is not desired, set to false or nil.
         #   Default: "has already been taken"
         def acts_as_login_model options = {}
-          extend LWT::AuthenticationSystem::Model::SingletonMethods
-          include LWT::AuthenticationSystem::Model::InstanceMethods
+          extend Mhs::AuthenticationSystem::Model::SingletonMethods
+          include Mhs::AuthenticationSystem::Model::InstanceMethods
 
-          self.lwt_authentication_system_options = {
+          self.mhs_authentication_system_options = {
             :group_validation => "can't be blank",
             :password_validation => "must match",
             :email_address_validation => "can't be blank",
@@ -48,19 +48,19 @@ module LWT
 
           belongs_to :group
 
-          if msg = lwt_authentication_system_options[:group_validation]
+          if msg = mhs_authentication_system_options[:group_validation]
             validates_presence_of :group_id, :message => msg
           end
 
-          if msg = lwt_authentication_system_options[:email_address_validation]
+          if msg = mhs_authentication_system_options[:email_address_validation]
             validates_presence_of :email_address, :message => msg
           end
 
-          if msg = lwt_authentication_system_options[:email_address_unique_validation]
+          if msg = mhs_authentication_system_options[:email_address_unique_validation]
             validates_uniqueness_of :email_address, :message => msg
           end
 
-          if msg = self.lwt_authentication_system_options[:password_validation]
+          if msg = self.mhs_authentication_system_options[:password_validation]
             validate do |user|
               if ( user.instance_variable_get( "@password" ) or user.instance_variable_get( "@password_confirmation" ) ) && 
                  user.instance_variable_get( "@password" ) != user.instance_variable_get( "@password_confirmation" )
@@ -83,7 +83,7 @@ module LWT
       end
 
       module SingletonMethods
-        attr_accessor :current_user, :lwt_authentication_system_options
+        attr_accessor :current_user, :mhs_authentication_system_options
 
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
@@ -99,9 +99,9 @@ module LWT
         # - Else, the stored block is called, giving passing it all arguments
         def hash_password( *args, &blk )
           if blk
-            self.lwt_authentication_system_options[:hash_password] = blk
+            self.mhs_authentication_system_options[:hash_password] = blk
           else
-            self.lwt_authentication_system_options[:hash_password].call *args
+            self.mhs_authentication_system_options[:hash_password].call *args
           end
         end
       end

@@ -29,7 +29,7 @@ ActiveRecord::Schema.suppress_messages do
     create_table :default_active_record_models, :force => true do |t|
     end
     
-    create_table :lwt_authentication_system_models, :force => true do |t|
+    create_table :mhs_authentication_system_models, :force => true do |t|
       t.column :password_hash, :string
       t.column :salt, :string
       t.column :email_address, :string
@@ -72,7 +72,7 @@ end
 class DefaultActiveRecordModel < ActiveRecord::Base
 end
 
-class LWTAuthenticationSystemModel < ActiveRecord::Base
+class MhsAuthenticationSystemModel < ActiveRecord::Base
   acts_as_login_model
 end
 

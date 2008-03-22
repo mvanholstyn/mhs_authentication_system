@@ -1,4 +1,4 @@
-class AddLwtAuthenticationSystem < ActiveRecord::Migration
+class AddMhsAuthenticationSystem < ActiveRecord::Migration
   def self.up
     create_table :groups do |t|
       t.string :name
