@@ -159,9 +159,11 @@ module Mhs
         # The logout action resets the session and rediects the user to
         # the page defined in redirect_after_logout.
         def logout
-          current_user.forget_me!
-          cookies.delete(:remember_me_token)
-          set_current_user nil
+          if current_user
+            current_user.forget_me!
+            cookies.delete(:remember_me_token)
+            set_current_user nil
+          end
           redirect_to self.instance_eval( &self.class.mhs_authentication_system_options[:redirect_after_logout] )
         end
 
