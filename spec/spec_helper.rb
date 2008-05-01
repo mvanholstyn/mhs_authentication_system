@@ -8,6 +8,8 @@ plugin_spec_directory = File.expand_path(File.dirname(__FILE__))
 # end
 # require File.join(RAILS_ROOT, "spec", "spec_helper")
 $:.unshift File.join(plugin_spec_directory, "../../../../vendor/rails")
+
+require 'rubygems'
 require 'action_controller'
 require 'active_record'
 require 'action_mailer'
@@ -75,7 +77,6 @@ end
 class MhsAuthenticationSystemModel < ActiveRecord::Base
   acts_as_login_model
 end
-
 
 # class UsersController < ActionController::Base
 # end
