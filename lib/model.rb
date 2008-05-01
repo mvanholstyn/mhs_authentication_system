@@ -21,25 +21,40 @@ module Mhs
         # * Adds methods from Mhs::AuthenticationSystem::Model::SingletonMethods
         #
         # Valid options:
+        # - :group_validation - Error message used when the group_id is blank.
+        #   If this check is not desired, set this to false.
+        #   Default: "can't be blank"
         # - :password_validation - Error message used when the passwords do not match.
-        #   If this check is not desired, set this to false or nil.
+        #   If this check is not desired, set this to false.
         #   Default: "must match"
         # - :email_address_validation - Error message used when the email_address is blank.
-        #   If this check is not desired, set this to false or nil.
+        #   If this check is not desired, set this to false.
         #   Default: "can't be blank"
         # - :email_address_unique_validation - Error message used when the email_address is
-        #   already in use. If this check is not desired, set to false or nil.
+        #   already in use. If this check is not desired, set to false.
         #   Default: "has already been taken"
         def acts_as_login_model(options = {})
           extend Mhs::AuthenticationSystem::Model::SingletonMethods
           include Mhs::AuthenticationSystem::Model::InstanceMethods
 
           self.mhs_authentication_system_options = {
-            :group_validation => "can't be blank",
-            :password_validation => "must match",
-            :email_address_validation => "can't be blank",
-            :email_address_unique_validation => "has already been taken"
-          }.merge(options)
+            :group_validation => { :message => "can't be blank" },
+            :email_address_validation => { :message => "can't be blank" },
+            :email_address_unique_validation => { :message => "has already been taken" },
+            :password_validation => "must match"
+          }.merge(options.except(:group_validation, :email_address_validation, :email_address_unique_validation))
+          
+          options.slice(:group_validation, :email_address_validation, :email_address_unique_validation).each do |key, value|
+            if value.is_a?(String)
+              self.mhs_authentication_system_options[key].merge(:message => value)
+            elsif value.is_a?(Hash)
+              self.mhs_authentication_system_options[key].merge(value)
+            elsif value == false
+              self.mhs_authentication_system_options[key] = false
+            else
+              raise ArgumentError, "Expected a String, a Hash, or false but got a #{value.class.name}"
+            end
+          end
 
           hash_password do |password, salt|
             require 'digest/sha1'
@@ -48,16 +63,16 @@ module Mhs
 
           belongs_to :group
 
-          if msg = mhs_authentication_system_options[:group_validation]
-            validates_presence_of :group_id, :message => msg
+          if options = mhs_authentication_system_options[:group_validation]
+            validates_presence_of :group_id, options
           end
 
-          if msg = mhs_authentication_system_options[:email_address_validation]
-            validates_presence_of :email_address, :message => msg
+          if options = mhs_authentication_system_options[:email_address_validation]
+            validates_presence_of :email_address, options
           end
 
-          if msg = mhs_authentication_system_options[:email_address_unique_validation]
-            validates_uniqueness_of :email_address, :message => msg
+          if options = mhs_authentication_system_options[:email_address_unique_validation]
+            validates_uniqueness_of :email_address, options
           end
 
           if msg = self.mhs_authentication_system_options[:password_validation]

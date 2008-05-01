@@ -94,6 +94,34 @@ describe MhsAuthenticationSystemModel, "acts_as_login_model" do
   it "acts_as_login_model"
 end
 
+describe MhsAuthenticationSystemModel, "validations" do
+  it "validates the presences of a group id" do
+    model = MhsAuthenticationSystemModel.new
+    model.should_not be_valid
+    model.errors.on(:group_id).should == "can't be blank"
+  end
+  
+  it "validates the presences of a email address" do
+    model = MhsAuthenticationSystemModel.new
+    model.should_not be_valid
+    model.errors.on(:email_address).should == "can't be blank"
+  end
+  
+  it "validates the uniqueness of a email address" do
+    saved_model = MhsAuthenticationSystemModel.create! :email_address => "user@example.com", :group_id => 1
+    model = MhsAuthenticationSystemModel.new :email_address => "user@example.com"
+    model.should_not be_valid
+    model.errors.on(:email_address).should == "has already been taken"
+    saved_model.destroy
+  end
+  
+  it "validates the confirmation of the password" do
+    model = MhsAuthenticationSystemModel.new :password => "password", :password_confirmation => "pass"
+    model.should_not be_valid
+    model.errors.on(:password).should == "must match"
+  end
+end
+
 describe MhsAuthenticationSystemModel, "hash_password" do
   it "hash_password returns SHA1 hash of password and salt" do
     MhsAuthenticationSystemModel.hash_password("password", "salt").should == "81c35bdfd7b6bc8878248ae59671c396aa519764"
