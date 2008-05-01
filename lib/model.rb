@@ -38,9 +38,9 @@ module Mhs
           include Mhs::AuthenticationSystem::Model::InstanceMethods
 
           self.mhs_authentication_system_options = {
-            :group_validation => { :message => "can't be blank" },
-            :email_address_validation => { :message => "can't be blank" },
-            :email_address_unique_validation => { :message => "has already been taken" },
+            :group_validation => {},
+            :email_address_validation => {},
+            :email_address_unique_validation => {},
             :password_validation => "must match"
           }.merge(options.except(:group_validation, :email_address_validation, :email_address_unique_validation))
           
