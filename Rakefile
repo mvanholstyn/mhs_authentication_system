@@ -7,7 +7,7 @@ task :default => :spec
 
 desc 'Run specs for the mhs_authentication_system plugin.'
 Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_opts = ['--options', %Q{#{File.join(File.dirname(__FILE__), '../../../spec/spec.opts')}}]
+  # t.spec_opts = ['--options', %Q{#{File.join(File.dirname(__FILE__), '../../../spec/spec.opts')}}]
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
