@@ -41,7 +41,8 @@ module Mhs
             :reminder_login_duration => 2.hours,
             :reminder_email_subject => "Support Reminder",
             :signup_email_subject => "Welcome",
-            :track_pre_login_url => true
+            :track_pre_login_url => true,
+            :reset_session_after_logout => true
           }.merge( options )
           
           if mhs_authentication_system_options[:allow_signup]
@@ -163,6 +164,7 @@ module Mhs
             current_user.forget_me!
             cookies.delete(:remember_me_token)
             set_current_user nil
+            reset_session if self.class.mhs_authentication_system_options[:reset_session_after_logout]
           end
           redirect_to self.instance_eval( &self.class.mhs_authentication_system_options[:redirect_after_logout] )
         end
