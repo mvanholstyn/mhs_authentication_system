@@ -6,9 +6,9 @@ Controller
  ? Update how restrict_to works so that it can be ignored in subclasses
 
 Model
- ? Allow custom validation msg for group and priv validations
+ ? Allow custom validation msg for role and priv validations
  ? allow configuration of password_hash, and salt column names
- ! Revisit mixin for group/priv/group_priv/forgot_pass/forgot_pass_mailer
+ ! Revisit mixin for role/priv/role_priv/forgot_pass/forgot_pass_mailer
 
 Ideas
  * Signup hooks and options
@@ -20,8 +20,7 @@ Ideas
  * Preferences system
  ? view helpers (link_to, form_for, etc...)
  ? Syntax for asking for permission a & b (not just or)
- ? Users can belong to many groups
- ? Rename Group to Role
+ ? Users can belong to many roles
  ? can_xxx? helpers for privileges
 
 Object level privileges

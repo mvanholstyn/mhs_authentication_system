@@ -9,7 +9,7 @@ module Mhs
       # These methods are added to ActiveRecord::Base
       module ClassMethods
         # Sets up this model as a login model. The following thigs are done:
-        # * belongs_to :group
+        # * belongs_to :role
         # * validates_presence_of :email_address
         # * validates_uniqueness_of :email_address
         # * sets up validation to check that password and password_confirmation
@@ -21,7 +21,7 @@ module Mhs
         # * Adds methods from Mhs::AuthenticationSystem::Model::SingletonMethods
         #
         # Valid options:
-        # - :group_validation - Error message used when the group_id is blank.
+        # - :role_validation - Error message used when the role_id is blank.
         #   If this check is not desired, set this to false.
         #   Default: "can't be blank"
         # - :password_validation - Error message used when the passwords do not match.
@@ -38,13 +38,13 @@ module Mhs
           include Mhs::AuthenticationSystem::Model::InstanceMethods
 
           self.mhs_authentication_system_options = {
-            :group_validation => {},
+            :role_validation => {},
             :email_address_validation => {},
             :email_address_unique_validation => {},
             :password_validation => "must match"
-          }.merge(options.except(:group_validation, :email_address_validation, :email_address_unique_validation))
+          }.merge(options.except(:role_validation, :email_address_validation, :email_address_unique_validation))
           
-          options.slice(:group_validation, :email_address_validation, :email_address_unique_validation).each do |key, value|
+          options.slice(:role_validation, :email_address_validation, :email_address_unique_validation).each do |key, value|
             if value.is_a?(String)
               self.mhs_authentication_system_options[key].merge(:message => value)
             elsif value.is_a?(Hash)
@@ -61,10 +61,10 @@ module Mhs
             Digest::SHA1.hexdigest("--#{salt}--#{password}--")
           end
 
-          belongs_to :group
+          belongs_to :role
 
-          if options = mhs_authentication_system_options[:group_validation]
-            validates_presence_of :group_id, options
+          if options = mhs_authentication_system_options[:role_validation]
+            validates_presence_of :role_id, options
           end
 
           if options = mhs_authentication_system_options[:email_address_validation]
@@ -103,7 +103,7 @@ module Mhs
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
         def login(params)
-          if not params.blank? and user = self.find_by_email_address(params[:email_address], :include => {:group => :privileges})
+          if not params.blank? and user = self.find_by_email_address(params[:email_address], :include => {:role => :privileges})
             self.hash_password(params[:password], user.salt) == user.password_hash ? user : nil
           end
         end
@@ -159,9 +159,9 @@ module Mhs
         # - :match_all - If set to true, returns true if this user has ALL of the 
         #   passed in privileges. Default: false
         def has_privilege?(*requested_privileges)
-          return false unless group
+          return false unless role
           options = requested_privileges.last.is_a?(Hash) ? requested_privileges.pop : {}
-          matched_privileges = requested_privileges.map(&:to_s) & group.privileges.map(&:name)
+          matched_privileges = requested_privileges.map(&:to_s) & role.privileges.map(&:name)
           options[:match_all] ? matched_privileges.size == requested_privileges.size : !matched_privileges.empty?
         end
       end

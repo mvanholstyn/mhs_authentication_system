@@ -35,13 +35,13 @@ ActiveRecord::Schema.suppress_messages do
       t.column :password_hash, :string
       t.column :salt, :string
       t.column :email_address, :string
-      t.column :group_id, :integer
+      t.column :role_id, :integer
       t.column :active, :boolean
       t.column :remember_me_token, :string
       t.column :remember_me_token_expires_at, :datetime
     end
     
-    create_table :groups, :force => true do |t|
+    create_table :roles, :force => true do |t|
       t.column :name, :string
     end
     
@@ -49,15 +49,15 @@ ActiveRecord::Schema.suppress_messages do
       t.column :name, :string
     end
     
-    create_table :groups_privileges, :force => true do |t|
-      t.column :group_id, :integer
+    create_table :privileges_roles, :force => true do |t|
+      t.column :role_id, :integer
       t.column :privilege_id, :integer
     end
     # 
     # create_table :users, :force => true do |t|
     #   t.column :username, :string
     #   t.column :password_hash, :string
-    #   t.column :group_id, :integer
+    #   t.column :role_id, :integer
     #   t.column :email_address, :string
     #   t.column :active, :boolean
     # end

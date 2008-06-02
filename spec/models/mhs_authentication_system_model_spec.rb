@@ -26,8 +26,8 @@ end
 
 
 describe MhsAuthenticationSystemModel, "instance responds to methods added by Mhs::AuthenticationSystem::Model::InstanceMethods" do
-  it "responds to group=" do
-    MhsAuthenticationSystemModel.new.should respond_to(:group=)
+  it "responds to role=" do
+    MhsAuthenticationSystemModel.new.should respond_to(:role=)
   end
 
   it "responds to password" do
@@ -65,8 +65,8 @@ describe MhsAuthenticationSystemModel, "responds to methods added by database sc
     MhsAuthenticationSystemModel.new.should respond_to(:password_hash)
   end
   
-  it "responds to group_id" do
-    MhsAuthenticationSystemModel.new.should respond_to(:group_id)
+  it "responds to role_id" do
+    MhsAuthenticationSystemModel.new.should respond_to(:role_id)
   end
   
   it "responds to email_address" do
@@ -95,10 +95,10 @@ describe MhsAuthenticationSystemModel, "acts_as_login_model" do
 end
 
 describe MhsAuthenticationSystemModel, "validations" do
-  it "validates the presences of a group id" do
+  it "validates the presences of a role id" do
     model = MhsAuthenticationSystemModel.new
     model.should_not be_valid
-    model.errors.on(:group_id).should == "can't be blank"
+    model.errors.on(:role_id).should == "can't be blank"
   end
   
   it "validates the presences of a email address" do
@@ -108,7 +108,7 @@ describe MhsAuthenticationSystemModel, "validations" do
   end
   
   it "validates the uniqueness of a email address" do
-    saved_model = MhsAuthenticationSystemModel.create! :email_address => "user@example.com", :group_id => 1
+    saved_model = MhsAuthenticationSystemModel.create! :email_address => "user@example.com", :role_id => 1
     model = MhsAuthenticationSystemModel.new :email_address => "user@example.com"
     model.should_not be_valid
     model.errors.on(:email_address).should == "has already been taken"
@@ -222,14 +222,14 @@ end
 
 describe MhsAuthenticationSystemModel, "has_privilege?" do
   before(:each) do
-    group = Group.create! :name => "admin"
+    role = Role.create! :name => "admin"
     admin_privilege = Privilege.create! :name => "admin"
     super_admin_privilege = Privilege.create! :name => "super_admin"
-    group.privileges << admin_privilege << super_admin_privilege 
-    @model = MhsAuthenticationSystemModel.new :group => group
+    role.privileges << admin_privilege << super_admin_privilege 
+    @model = MhsAuthenticationSystemModel.new :role => role
   end
 
-  it "returns false if user does not have a group" do
+  it "returns false if user does not have a role" do
     MhsAuthenticationSystemModel.new.has_privilege?(:admin).should be_false
   end
 

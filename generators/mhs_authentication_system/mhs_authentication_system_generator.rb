@@ -19,8 +19,8 @@ class MhsAuthenticationSystemGenerator < Rails::Generator::Base
       m.template 'app/views/users/profile.html.erb', File.join( *%W{ app views users profile.html.erb } )
       m.template 'app/views/users/reminder.html.erb', File.join( *%W{ app views users reminder.html.erb } )
       m.template 'app/views/users/signup.html.erb', File.join( *%W{ app views users signup.html.erb } )
-      m.template 'spec/fixtures/groups.yml', File.join( *%w{ spec fixtures groups.yml } )
-      m.template 'spec/fixtures/groups_privileges.yml', File.join( *%w{ spec fixtures groups_privileges.yml } )
+      m.template 'spec/fixtures/roles.yml', File.join( *%w{ spec fixtures roles.yml } )
+      m.template 'spec/fixtures/privileges_roles.yml', File.join( *%w{ spec fixtures privileges_roles.yml } )
       m.template 'spec/fixtures/privileges.yml', File.join( *%w{ spec fixtures privileges.yml } )
       m.template 'spec/fixtures/users.yml', File.join( *%w{ spec fixtures users.yml } )
       m.migration_template 'db/migrate/migration.rb', File.join( *%w{ db migrate } ), :migration_file_name => "add_mhs_authentication_system"

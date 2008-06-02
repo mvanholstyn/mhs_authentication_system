@@ -9,8 +9,8 @@ Example:
         Controller: app/controller/users_controller.rb
         View:       app/view/users/login.erb
         Migration:  db/migrate/XXX_add_mhs_authentication_system.rb
-        Fixtures:   test/fixtures/privileges.yml
-                    test/fixtures/groups.yml
-                    test/fixtures/groups_privileges.yml
-                    test/fixtures/users.yml
+        Fixtures:   spec/fixtures/privileges.yml
+                    spec/fixtures/roles.yml
+                    spec/fixtures/privileges_roles.yml
+                    spec/fixtures/users.yml
 

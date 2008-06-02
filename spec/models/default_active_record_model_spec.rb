@@ -26,8 +26,8 @@ end
 
 
 describe DefaultActiveRecordModel, "instance does not respond to methods added by Mhs::AuthenticationSystem::Model::InstanceMethods" do
-  it "does not respond to group=" do
-    DefaultActiveRecordModel.new.should_not respond_to(:group=)
+  it "does not respond to role=" do
+    DefaultActiveRecordModel.new.should_not respond_to(:role=)
   end
 
   it "does not respond to password" do
@@ -65,8 +65,8 @@ describe DefaultActiveRecordModel, "does not respond to methods added by databas
     DefaultActiveRecordModel.new.should_not respond_to(:password_hash)
   end
   
-  it "does not respond to group_id" do
-    DefaultActiveRecordModel.new.should_not respond_to(:group_id)
+  it "does not respond to role_id" do
+    DefaultActiveRecordModel.new.should_not respond_to(:role_id)
   end
   
   it "does not respond to email_address" do
