@@ -7,7 +7,6 @@ Controller
 
 Model
  ? Allow custom validation msg for role and priv validations
- ? allow configuration of password_hash, and salt column names
  ! Revisit mixin for role/priv/role_priv/forgot_pass/forgot_pass_mailer
 
 Ideas
