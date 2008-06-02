@@ -8,7 +8,7 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
       t.string :name
     end
 
-    create_table :groups_privileges do |t|
+    create_table :groups_privileges, :id => false do |t|
       t.integer :group_id
       t.integer :privilege_id
     end
