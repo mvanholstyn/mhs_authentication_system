@@ -103,7 +103,7 @@ module Mhs
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
         def login(params)
-          if not params.blank? and user = self.find_by_email_address(params[:email_address], :include => {:role => :privileges})
+          if not params.blank? and user = self.find_by_email_address(params[:email_address])
             self.hash_password(params[:password], user.salt) == user.password_hash ? user : nil
           end
         end

@@ -109,7 +109,7 @@ module Mhs
         
         def find_and_set_current_user
           if session[:current_user_id]
-            set_current_user self.class.login_model.find(session[:current_user_id], :include => {:role => :privileges })
+            set_current_user self.class.login_model.find(session[:current_user_id])
           elsif cookies[:remember_me_token]
             model = self.class.login_model.find(:first, :conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now], :include => {:role => :privileges })
             if model
