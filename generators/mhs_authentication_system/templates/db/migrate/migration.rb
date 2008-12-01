@@ -2,15 +2,18 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
   def self.up
     create_table :roles do |t|
       t.string :name
+      t.timestamps
     end
 
     create_table :privileges do |t|
       t.string :name
+      t.timestamps
     end
 
     create_table :privileges_roles, :id => false do |t|
       t.integer :role_id
       t.integer :privilege_id
+      t.timestamps
     end
     add_index :privileges_roles, :role_id
     add_index :privileges_roles, :privilege_id
@@ -23,6 +26,7 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
       t.boolean :active
       t.string :remember_me_token
       t.datetime :remember_me_token_expires_at
+      t.timestamps
     end
     add_index :users, :role_id
     
@@ -30,6 +34,7 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
       t.integer :user_id
       t.string :token
       t.datetime :expires_at
+      t.timestamps
     end
     add_index :user_reminders, :user_id
   end
