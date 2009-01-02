@@ -24,7 +24,9 @@ module Mhs
         # - :role_validation - Error message used when the role_id is blank.
         #   If this check is not desired, set this to false.
         #   Default: "can't be blank"
-        # - :password_validation - Error message used when the passwords do not match.
+        # - :password_validation - Error message used when the password is blank.
+        #   If this check is not desired, set this to false.
+        # - :password_matching_validation - Error message used when the passwords do not match.
         #   If this check is not desired, set this to false.
         #   Default: "must match"
         # - :email_address_validation - Error message used when the email_address is blank.
@@ -41,7 +43,8 @@ module Mhs
             :role_validation => {},
             :email_address_validation => {},
             :email_address_unique_validation => {},
-            :password_validation => "must match"
+            :password_validation => "can't be blank",
+            :password_matching_validation => "must match"
           }.merge(options.except(:role_validation, :email_address_validation, :email_address_unique_validation))
           
           options.slice(:role_validation, :email_address_validation, :email_address_unique_validation).each do |key, value|
@@ -77,16 +80,22 @@ module Mhs
 
           if msg = self.mhs_authentication_system_options[:password_validation]
             validate do |user|
-              if(user.instance_variable_get("@password") or user.instance_variable_get("@password_confirmation")) && 
-                 user.instance_variable_get("@password") != user.instance_variable_get("@password_confirmation")
+              password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
+              if password.blank? and password_confirmation.blank? and user.password_hash.blank?
                 user.errors.add(:password, msg)
-                false
-              else
-                true
               end
             end
           end
-          
+
+          if msg = self.mhs_authentication_system_options[:password_matching_validation]
+            validate do |user|
+              password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
+              if (password or password_confirmation) && password != password_confirmation
+                user.errors.add(:password, msg)
+              end
+            end
+          end
+
           before_save do |user|
             if user.instance_variable_get("@password")
               require 'digest/sha1'
