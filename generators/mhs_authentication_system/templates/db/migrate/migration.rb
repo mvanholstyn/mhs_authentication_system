@@ -13,10 +13,11 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
     create_table :privileges_roles, :id => false do |t|
       t.integer :role_id
       t.integer :privilege_id
-      t.timestamps
     end
+    
     add_index :privileges_roles, :role_id
     add_index :privileges_roles, :privilege_id
+    add_index :privileges_roles, [:role_id, :privilege_id], :uniq => true
 
     create_table :users do |t|
       t.string :password_hash
@@ -29,6 +30,8 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
       t.timestamps
     end
     add_index :users, :role_id
+    add_index :users, :email_address
+    add_index :users, [:remember_me_token, :remember_me_token_expires_at]
     
     create_table :user_reminders do |t|
       t.integer :user_id
@@ -37,6 +40,7 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
       t.timestamps
     end
     add_index :user_reminders, :user_id
+    add_index :user_reminders, [:user_id, :token, :expires_at]
   end
 
   def self.down
