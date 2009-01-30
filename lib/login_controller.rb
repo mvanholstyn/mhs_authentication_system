@@ -123,7 +123,7 @@ module Mhs
         # - Else, the login template will be rendered.
         def login
           if request.post?
-            instance_variable_set("@#{self.class.login_model_name}", model = self.class.login_model.login(params[self.class.login_model_name.to_sym]))
+            instance_variable_set("@#{self.class.login_model_name}", model = self.instance_eval(&self.class.login_model_scope).login(params[self.class.login_model_name.to_sym]))
             if model
               if model.active?
                 if not params[:remember_me].blank?
@@ -140,7 +140,7 @@ module Mhs
               flash.now[:error] = self.class.mhs_authentication_system_options[:invalid_login_flash]
             end
           elsif params[:id] and params[:token] and reminder = UserReminder.find(:first, :conditions => ["user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now])
-            model = self.class.login_model.find(reminder.user_id)
+            model = self.instance_eval(&self.class.login_model_scope).find(reminder.user_id)
             model.update_attribute :active, true
             self.set_current_user model
             reminder.destroy
@@ -149,7 +149,7 @@ module Mhs
             do_redirect_after_login
             return
           else
-            instance_variable_set("@#{self.class.login_model_name}", self.class.login_model.new)
+            instance_variable_set("@#{self.class.login_model_name}", self.instance_eval(&self.class.login_model_scope).new)
             flash.now[:notice] ||= self.class.mhs_authentication_system_options[:login_flash]
           end
         end
@@ -169,7 +169,7 @@ module Mhs
         def reminder
           if request.post?
             email_address = params[self.class.login_model_name.to_sym][:email_address]
-            if email_address.blank? || (model = self.class.login_model.find_by_email_address(email_address)).nil?
+            if email_address.blank? || (model = self.instance_eval(&self.class.login_model_scope).find_by_email_address(email_address)).nil?
               flash.now[:error] = self.class.mhs_authentication_system_options[:reminder_error_flash]
             else
               reminder = UserReminder.create_for_user(model, Time.now + self.class.mhs_authentication_system_options[:reminder_login_duration])
@@ -181,7 +181,7 @@ module Mhs
               redirect_to :action => "login"
             end
           else
-            instance_variable_set("@#{self.class.login_model_name}", self.class.login_model.new)
+            instance_variable_set("@#{self.class.login_model_name}", self.instance_eval(&self.class.login_model_scope).new)
             flash.now[:notice] = self.class.mhs_authentication_system_options[:reminder_flash]
           end
         end
@@ -228,7 +228,7 @@ module Mhs
 
       module SignupInstanceMethods
         def signup
-          instance_variable_set( "@#{self.class.login_model_name}", model = self.class.login_model.new( params[self.class.login_model_name.to_sym] ) )
+          instance_variable_set( "@#{self.class.login_model_name}", model = self.instance_eval(&self.class.login_model_scope).new( params[self.class.login_model_name.to_sym] ) )
           if request.post?
             model.active = self.class.mhs_authentication_system_options[:require_activation] ? false : true
             if model.save

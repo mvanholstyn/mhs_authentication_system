@@ -6,7 +6,7 @@ module Mhs
         base.extend ClassMethods
         base.send :include, InstanceMethods
 
-        base.class_inheritable_accessor :permission_granted, :permission_denied, :not_logged_in, :login_model_name, :login_controller_name
+        base.class_inheritable_accessor :permission_granted, :permission_denied, :not_logged_in, :login_model_name, :login_controller_name, :login_model_scope
         base.helper_method :current_user, :restrict_to
 
         base.before_filter :find_and_set_current_user
@@ -27,6 +27,10 @@ module Mhs
         
         base.on_permission_granted do
           true
+        end
+
+        base.set_login_model_scope do
+          self.class.login_model
         end
       end
 
@@ -83,6 +87,10 @@ module Mhs
         def login_model
           self.login_model_name.classify.constantize
         end
+
+        def set_login_model_scope &blk
+          self.login_model_scope = blk
+        end
       end
       
       # These methods are added to ActionController::Base
@@ -109,9 +117,9 @@ module Mhs
         
         def find_and_set_current_user
           if session[:current_user_id]
-            set_current_user self.class.login_model.find(session[:current_user_id])
+            set_current_user self.instance_eval(&self.class.login_model_scope).find(session[:current_user_id])
           elsif cookies[:remember_me_token]
-            model = self.class.login_model.find(:first, :conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now], :include => {:role => :privileges })
+            model = self.instance_eval(&self.class.login_model_scope).find(:first, :conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now])
             if model
               model.remember_me!
               cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
@@ -119,7 +127,7 @@ module Mhs
             set_current_user model 
           elsif not ActionController::HttpAuthentication::Basic.authorization(request).blank?
             model = authenticate_with_http_basic do |email_address, password|
-              self.class.login_model.login(:email_address => email_address, :password => password)
+              self.instance_eval(&self.class.login_model_scope).login(:email_address => email_address, :password => password)
             end
             
             if model
