@@ -78,20 +78,20 @@ module Mhs
             validates_uniqueness_of :email_address, options
           end
 
-          if msg = self.mhs_authentication_system_options[:password_validation]
+          if self.mhs_authentication_system_options[:password_validation]
             validate do |user|
               password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
               if password.blank? and password_confirmation.blank? and user.password_hash.blank?
-                user.errors.add(:password, msg)
+                user.errors.add(:password, self.mhs_authentication_system_options[:password_validation])
               end
             end
           end
 
-          if msg = self.mhs_authentication_system_options[:password_matching_validation]
+          if self.mhs_authentication_system_options[:password_matching_validation]
             validate do |user|
               password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
-              if (password or password_confirmation) && password != password_confirmation
-                user.errors.add(:password, msg)
+              if (password or password_confirmation) and password != password_confirmation
+                user.errors.add(:password, self.mhs_authentication_system_options[:password_matching_validation])
               end
             end
           end
