@@ -31,7 +31,7 @@ class AddMhsAuthenticationSystem < ActiveRecord::Migration
     end
     add_index :users, :role_id
     add_index :users, :email_address
-    add_index :users, [:remember_me_token, :remember_me_token_expires_at]
+    add_index :users, [:remember_me_token, :remember_me_token_expires_at], :name => "index_users_on_remember_me_token"
     
     create_table :user_reminders do |t|
       t.integer :user_id
