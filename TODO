@@ -1,6 +1,5 @@
 Overall
  ! Add Tests
- ! Add routes
 
 Controller
  ? Update how restrict_to works so that it can be ignored in subclasses
