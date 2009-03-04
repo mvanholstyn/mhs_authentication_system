@@ -22,7 +22,7 @@ module Mhs
         #   page before logging in, after logging in they will be redirected to
         #   the page they initially requested rather then the page defined by the
         #   after_login_redirect. Defatut: true
-        def acts_as_login_controller( options = {} )
+        def acts_as_login_controller(options = {})
           include Mhs::AuthenticationSystem::LoginController::InstanceMethods
           extend Mhs::AuthenticationSystem::LoginController::SingletonMethods
 
@@ -43,7 +43,7 @@ module Mhs
             :signup_email_subject => "Welcome",
             :track_pre_login_url => true,
             :reset_session_after_logout => true
-          }.merge( options )
+          }.merge(options)
           
           if mhs_authentication_system_options[:allow_signup]
             include Mhs::AuthenticationSystem::LoginController::SignupInstanceMethods
@@ -63,8 +63,8 @@ module Mhs
         attr_accessor :mhs_authentication_system_options
         
         # Update restrict_to to automatically ignore the login, logout, reminder, profile, and signup actions
-        def restrict_to *privileges, &blk
-          options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
+        def restrict_to(*privileges, &blk)
+          options = privileges.extract_options!
 
           if not options[:only]
             options[:except] = Array(options[:except]) + [:login, :logout, :reminder, :profile, :signup]
@@ -79,36 +79,36 @@ module Mhs
         # successfully logs in. The block will be evaluated in the scope
         # of the controller.
         def redirect_after_login &blk
-          self.mhs_authentication_system_options[:redirect_after_login] = blk
+          mhs_authentication_system_options[:redirect_after_login] = blk
         end
 
         # Sets the arguments to be passed to redirect_to after a user
         # successfully logs in. The block will be evaluated in the scope
         # of the controller.
         def redirect_after_reminder_login &blk
-          self.mhs_authentication_system_options[:redirect_after_reminder_login] = blk
+          mhs_authentication_system_options[:redirect_after_reminder_login] = blk
         end
 
         # Sets the arguments to be passed to redirect_to after a user
         # successfully logs out. The block will be evaluated in the scope
         # of the controller.
         def redirect_after_logout &blk
-          self.mhs_authentication_system_options[:redirect_after_logout] = blk
+          mhs_authentication_system_options[:redirect_after_logout] = blk
         end
 
         def after_successful_signup &blk
-          self.mhs_authentication_system_options[:after_successful_signup] = blk
+          mhs_authentication_system_options[:after_successful_signup] = blk
         end
         
         def after_failed_signup &blk
-          self.mhs_authentication_system_options[:after_failed_signup] = blk
+          mhs_authentication_system_options[:after_failed_signup] = blk
         end
 
         # Sets the arguments to be passed to redirect_to after a user
         # successfully signs up. The block will be evaluated in the scope
         # of the controller.
         def redirect_after_signup &blk
-          self.mhs_authentication_system_options[:redirect_after_signup] = blk
+          mhs_authentication_system_options[:redirect_after_signup] = blk
         end
       end
 
@@ -123,7 +123,7 @@ module Mhs
         # - Else, the login template will be rendered.
         def login
           if request.post?
-            instance_variable_set("@#{self.class.login_model_name}", model = self.instance_eval(&self.class.login_model_scope).login(params[self.class.login_model_name.to_sym]))
+            instance_variable_set("@#{self.class.login_model_name}", model = instance_eval(&self.class.login_model_scope).login(params[self.class.login_model_name]))
             if model
               if model.active?
                 if not params[:remember_me].blank?
@@ -139,17 +139,17 @@ module Mhs
             else
               flash.now[:error] = self.class.mhs_authentication_system_options[:invalid_login_flash]
             end
-          elsif params[:id] and params[:token] and reminder = UserReminder.find(:first, :conditions => ["user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now])
-            model = self.instance_eval(&self.class.login_model_scope).find(reminder.user_id)
+          elsif params[:id] and params[:token] and reminder = UserReminder.first(:conditions => ["user_id = ? AND token = ? AND expires_at >= ? ", params[:id], params[:token], Time.now])
+            model = instance_eval(&self.class.login_model_scope).find(reminder.user_id)
             model.update_attribute :active, true
-            self.set_current_user model
+            set_current_user model
             reminder.destroy
             do_redirect_after_reminder_login
-          elsif self.current_user
+          elsif current_user
             do_redirect_after_login
             return
           else
-            instance_variable_set("@#{self.class.login_model_name}", self.instance_eval(&self.class.login_model_scope).new)
+            instance_variable_set("@#{self.class.login_model_name}", instance_eval(&self.class.login_model_scope).new)
             flash.now[:notice] ||= self.class.mhs_authentication_system_options[:login_flash]
           end
         end
@@ -163,13 +163,14 @@ module Mhs
             set_current_user nil
             reset_session if self.class.mhs_authentication_system_options[:reset_session_after_logout]
           end
-          redirect_to self.instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_logout])
+          redirect_to instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_logout])
         end
 
         def reminder
           if request.post?
-            email_address = params[self.class.login_model_name.to_sym][:email_address]
-            if email_address.blank? || (model = self.instance_eval(&self.class.login_model_scope).find_by_email_address(email_address)).nil?
+            login_attribute = self.class.login_model.mhs_authentication_system_options[:login_attribute]
+            login_attribute_value = params[self.class.login_model_name][login_attribute]
+            if login_model_name.blank? || (model = instance_eval(&self.class.login_model_scope).first(:conditions => { login_attribute => login_attribute_value })).nil?
               flash.now[:error] = self.class.mhs_authentication_system_options[:reminder_error_flash]
             else
               reminder = UserReminder.create_for_user(model, Time.now + self.class.mhs_authentication_system_options[:reminder_login_duration])
@@ -181,7 +182,7 @@ module Mhs
               redirect_to :action => "login"
             end
           else
-            instance_variable_set("@#{self.class.login_model_name}", self.instance_eval(&self.class.login_model_scope).new)
+            instance_variable_set("@#{self.class.login_model_name}", instance_eval(&self.class.login_model_scope).new)
             flash.now[:notice] = self.class.mhs_authentication_system_options[:reminder_flash]
           end
         end
@@ -192,7 +193,7 @@ module Mhs
     
             if request.put?
               respond_to do |format|
-                if current_user.update_attributes(params[self.class.login_model_name.to_sym])
+                if current_user.update_attributes(params[self.class.login_model_name])
                   flash[:notice] = 'Your profile was successfully updated.'
                   format.html { do_redirect_after_login }
                   format.xml  { head :ok }
@@ -210,7 +211,7 @@ module Mhs
       private
         def do_redirect_after_reminder_login
           if blk = self.class.mhs_authentication_system_options[:redirect_after_reminder_login]
-            redirect_to self.instance_eval(&blk)
+            redirect_to instance_eval(&blk)
           else
             do_redirect_after_login
           end
@@ -221,25 +222,26 @@ module Mhs
             redirect_to session[:pre_login_url]
             session[:pre_login_url] = nil
           else
-            redirect_to self.instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_login])
+            redirect_to instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_login])
           end
         end
       end
 
       module SignupInstanceMethods
         def signup
-          instance_variable_set( "@#{self.class.login_model_name}", model = self.instance_eval(&self.class.login_model_scope).new( params[self.class.login_model_name.to_sym] ) )
+          instance_variable_set("@#{self.class.login_model_name}", model = instance_eval(&self.class.login_model_scope).new(params[self.class.login_model_name]))
           if request.post?
             model.active = self.class.mhs_authentication_system_options[:require_activation] ? false : true
             if model.save
-              reminder = UserReminder.create_for_user( model, Time.now + self.class.mhs_authentication_system_options[:reminder_login_duration] )
+              reminder = UserReminder.create_for_user(model, Time.now + self.class.mhs_authentication_system_options[:reminder_login_duration])
               url = url_for(:action => 'login', :id => model, :token => reminder.token)
               UserReminderMailer.deliver_signup(model, reminder, url, 
                 :from => self.class.mhs_authentication_system_options[:email_from], 
-                :subject => self.class.mhs_authentication_system_options[:signup_email_subject] )
+                :subject => self.class.mhs_authentication_system_options[:signup_email_subject]
+              )
               flash[:notice] = self.class.mhs_authentication_system_options[:successful_signup_flash]
               instance_eval(&self.class.mhs_authentication_system_options[:after_successful_signup]) if self.class.mhs_authentication_system_options[:after_successful_signup]
-              redirect_to self.instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_signup])
+              redirect_to instance_eval(&self.class.mhs_authentication_system_options[:redirect_after_signup])
             else
               instance_eval(&self.class.mhs_authentication_system_options[:after_failed_signup]) if self.class.mhs_authentication_system_options[:after_failed_signup]
             end

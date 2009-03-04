@@ -1,4 +1,4 @@
-if( Role rescue true )
+if(Role rescue true)
   class ::Role < ActiveRecord::Base
   end
 end

@@ -1,4 +1,4 @@
-dir = File.join( File.dirname( __FILE__), 'lib')
+dir = File.join(File.dirname(__FILE__), 'lib')
 
 require File.join(dir, 'model')
 require File.join(dir, 'controller')

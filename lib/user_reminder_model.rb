@@ -1,4 +1,4 @@
-if( UserReminder rescue true )
+if(UserReminder rescue true)
   class ::UserReminder < ActiveRecord::Base
   end
 end
@@ -16,6 +16,6 @@ private
 
   def self.generate_token
     require 'md5'
-    MD5.hexdigest( rand.to_s )
+    MD5.hexdigest(rand.to_s)
   end
 end

@@ -40,20 +40,23 @@ module Mhs
           include Mhs::AuthenticationSystem::Model::InstanceMethods
 
           self.mhs_authentication_system_options = {
-            :role_validation => {},
+            :login_attribute => :email_address,
+            :login_validation => {},
+            :login_unique_validation => {},
             :email_address_validation => {},
             :email_address_unique_validation => {},
+            :role_validation => {},
             :password_validation => "can't be blank",
             :password_matching_validation => "must match"
-          }.merge(options.except(:role_validation, :email_address_validation, :email_address_unique_validation))
+          }.merge(options.except(:login_validation, :login_unique_validation, :email_address_validation, :email_address_unique_validation, :role_validation))
           
-          options.slice(:role_validation, :email_address_validation, :email_address_unique_validation).each do |key, value|
+          options.slice(:login_validation, :login_unique_validation, :email_address_validation, :email_address_unique_validation, :role_validation).each do |key, value|
             if value.is_a?(String)
-              self.mhs_authentication_system_options[key].merge(:message => value)
+              mhs_authentication_system_options[key].merge(:message => value)
             elsif value.is_a?(Hash)
-              self.mhs_authentication_system_options[key].merge(value)
+              mhs_authentication_system_options[key].merge(value)
             elsif value == false
-              self.mhs_authentication_system_options[key] = false
+              mhs_authentication_system_options[key] = false
             else
               raise ArgumentError, "Expected a String, a Hash, or false but got a #{value.class.name}"
             end
@@ -66,8 +69,14 @@ module Mhs
 
           belongs_to :role
 
-          if options = mhs_authentication_system_options[:role_validation]
-            validates_presence_of :role_id, options
+          if mhs_authentication_system_options[:login_attribute] != :email_address
+            if options = mhs_authentication_system_options[:login_validation]
+              validates_presence_of mhs_authentication_system_options[:login_attribute], options
+            end
+
+            if options = mhs_authentication_system_options[:login_unique_validation]
+              validates_uniqueness_of mhs_authentication_system_options[:login_attribute], options
+            end
           end
 
           if options = mhs_authentication_system_options[:email_address_validation]
@@ -78,20 +87,24 @@ module Mhs
             validates_uniqueness_of :email_address, options
           end
 
-          if self.mhs_authentication_system_options[:password_validation]
+          if options = mhs_authentication_system_options[:role_validation]
+            validates_presence_of :role_id, options
+          end
+
+          if mhs_authentication_system_options[:password_validation]
             validate do |user|
               password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
               if password.blank? and password_confirmation.blank? and user.password_hash.blank?
-                user.errors.add(:password, self.mhs_authentication_system_options[:password_validation])
+                user.errors.add(:password, mhs_authentication_system_options[:password_validation])
               end
             end
           end
 
-          if self.mhs_authentication_system_options[:password_matching_validation]
+          if mhs_authentication_system_options[:password_matching_validation]
             validate do |user|
               password, password_confirmation = user.instance_variable_get("@password"), user.instance_variable_get("@password_confirmation")
               if (password or password_confirmation) and password != password_confirmation
-                user.errors.add(:password, self.mhs_authentication_system_options[:password_matching_validation])
+                user.errors.add(:password, mhs_authentication_system_options[:password_matching_validation])
               end
             end
           end
@@ -100,7 +113,7 @@ module Mhs
             if user.instance_variable_get("@password")
               require 'digest/sha1'
               user.salt ||= Digest::SHA1.hexdigest("--#{Time.now}--#{user.email_address}--")
-              user.password_hash = self.hash_password(user.instance_variable_get( "@password" ), user.salt)
+              user.password_hash = hash_password(user.instance_variable_get("@password"), user.salt)
             end
           end
         end
@@ -112,8 +125,9 @@ module Mhs
         # Attempts to find a user by the passed in attributes. The param :password will
         # be removed and will be checked against the password of the user found (if any).
         def login(params)
-          if not params.blank? and user = self.find_by_email_address(params[:email_address])
-            self.hash_password(params[:password], user.salt) == user.password_hash ? user : nil
+          login_attribute = mhs_authentication_system_options[:login_attribute]
+          if not params.blank? and not params[login_attribute].blank? and user = first(:conditions => { login_attribute => params[login_attribute] })
+            hash_password(params[:password], user.salt) == user.password_hash ? user : nil
           end
         end
 
@@ -123,9 +137,9 @@ module Mhs
         # - Else, the stored block is called, giving passing it all arguments
         def hash_password(*args, &blk)
           if blk
-            self.mhs_authentication_system_options[:hash_password] = blk
+            mhs_authentication_system_options[:hash_password] = blk
           else
-            self.mhs_authentication_system_options[:hash_password].call *args
+            mhs_authentication_system_options[:hash_password].call *args
           end
         end
       end
@@ -169,7 +183,7 @@ module Mhs
         #   passed in privileges. Default: false
         def has_privilege?(*requested_privileges)
           return false unless role
-          options = requested_privileges.last.is_a?(Hash) ? requested_privileges.pop : {}
+          options = requested_privileges.extract_options!
           matched_privileges = requested_privileges.map(&:to_s) & role.privileges.map(&:name)
           options[:match_all] ? matched_privileges.size == requested_privileges.size : !matched_privileges.empty?
         end

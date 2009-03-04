@@ -21,9 +21,9 @@ ActionController::Routing::Routes.draw {|m| m.connect ':controller/:action/:id' 
 ActionController::Routing.use_controllers! %w(users account admin/users)
 
 # Setup logging and db connection
-FileUtils.mkdir( File.join( plugin_spec_directory, 'tmp' ) ) unless File.exists?( File.join( plugin_spec_directory, 'tmp' ) )
-ActiveRecord::Base.logger = Logger.new File.join( plugin_spec_directory, 'tmp/test.log' )
-ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => File.join( plugin_spec_directory, 'tmp/test.db' )
+FileUtils.mkdir(File.join(plugin_spec_directory, 'tmp')) unless File.exists?(File.join(plugin_spec_directory, 'tmp'))
+ActiveRecord::Base.logger = Logger.new File.join(plugin_spec_directory, 'tmp/test.log')
+ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => File.join(plugin_spec_directory, 'tmp/test.db')
 
 # Load schema
 ActiveRecord::Schema.suppress_messages do

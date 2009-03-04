@@ -1,4 +1,4 @@
-require File.join(File.dirname( __FILE__ ), '../spec_helper')
+require File.join(File.dirname(__FILE__), '../spec_helper')
 
 describe DefaultActiveRecordModel, "responds to methods added by Mhs::AuthenticationSystem::Model::ClassMethods" do
   it "responds to acts_as_login_model" do

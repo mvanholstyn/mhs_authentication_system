@@ -1,4 +1,4 @@
-require File.join( File.dirname( __FILE__ ), '../spec_helper' )
+require File.join(File.dirname(__FILE__), '../spec_helper')
 
 describe MhsAuthenticationSystemModel, "responds to methods added by Mhs::AuthenticationSystem::Model::ClassMethods" do
   it "responds to acts_as_login_model" do
@@ -108,7 +108,7 @@ describe MhsAuthenticationSystemModel, "validations" do
   end
   
   it "validates the uniqueness of a email address" do
-    saved_model = MhsAuthenticationSystemModel.create! :email_address => "user@example.com", :role_id => 1
+    saved_model = MhsAuthenticationSystemModel.create! :email_address => "user@example.com", :role_id => 1, :password => "password", :password_confirmation => "password"
     model = MhsAuthenticationSystemModel.new :email_address => "user@example.com"
     model.should_not be_valid
     model.errors.on(:email_address).should == "has already been taken"

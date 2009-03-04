@@ -2,7 +2,7 @@ module Mhs
   module AuthenticationSystem
     module Controller
 
-      def self.included base #:nodoc:
+      def self.included(base) #:nodoc:
         base.extend ClassMethods
         base.send :include, InstanceMethods
 
@@ -15,7 +15,7 @@ module Mhs
         base.set_login_controller :users_controller
 
         base.on_not_logged_in do
-          redirect_to :controller => self.class.login_controller_name.gsub( /_controller$/, '' ), :action => 'login'
+          redirect_to :controller => self.class.login_controller_name.gsub(/_controller$/, ''), :action => 'login'
         end
 
         base.on_permission_denied do
@@ -40,16 +40,16 @@ module Mhs
         # This method takes a list of privileges which should be allowes, as well as the options
         # hash which will be passed to before_filter.
         def restrict_to *privileges, &blk          
-          options = privileges.last.is_a?( Hash ) ? privileges.pop : {}
+          options = privileges.extract_options!
 
-          before_filter( options ) do |c|
-            if !c.current_user.is_a? self.login_model
-              c.session[:pre_login_url] = c.url_for( c.params )
-              c.instance_eval &c.class.not_logged_in
-            elsif c.current_user.has_privilege?( *privileges ) or (blk and c.instance_eval &blk)
-              c.instance_eval &c.class.permission_granted
+          before_filter(options) do |c|
+            if !c.current_user.is_a? login_model
+              c.session[:pre_login_url] = c.url_for(c.params)
+              c.instance_eval(&c.class.not_logged_in)
+            elsif c.current_user.has_privilege?(*privileges) or (blk and c.instance_eval(&blk))
+              c.instance_eval(&c.class.permission_granted)
             else
-              c.instance_eval &c.class.permission_denied
+              c.instance_eval(&c.class.permission_denied)
             end
           end
         end
@@ -100,7 +100,7 @@ module Mhs
         end
 
         def restrict_to *privileges, &blk
-          if current_user.is_a?( self.class.login_model ) and current_user.has_privilege?( *privileges )
+          if current_user.is_a?(self.class.login_model) and current_user.has_privilege?(*privileges)
             blk.call
           end
         end
@@ -117,17 +117,18 @@ module Mhs
         
         def find_and_set_current_user
           if session[:current_user_id]
-            set_current_user self.instance_eval(&self.class.login_model_scope).find(session[:current_user_id])
+            set_current_user instance_eval(&self.class.login_model_scope).find(session[:current_user_id])
           elsif cookies[:remember_me_token]
-            model = self.instance_eval(&self.class.login_model_scope).find(:first, :conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now])
+            model = instance_eval(&self.class.login_model_scope).first(:conditions => ["remember_me_token = ? AND remember_me_token_expires_at >= ?", cookies[:remember_me_token], Time.now])
             if model
               model.remember_me!
               cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
             end
             set_current_user model 
           elsif not ActionController::HttpAuthentication::Basic.authorization(request).blank?
-            model = authenticate_with_http_basic do |email_address, password|
-              self.instance_eval(&self.class.login_model_scope).login(:email_address => email_address, :password => password)
+            model = authenticate_with_http_basic do |login_attribute_value, password|
+              login_attribute = self.class.login_model.mhs_authentication_system_options[:login_attribute]
+              instance_eval(&self.class.login_model_scope).login(login_attribute => login_attribute_value, :password => password)
             end
             
             if model
