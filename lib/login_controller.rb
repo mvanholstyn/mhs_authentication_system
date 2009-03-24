@@ -42,7 +42,8 @@ module Mhs
             :reminder_email_subject => "Support Reminder",
             :signup_email_subject => "Welcome",
             :track_pre_login_url => true,
-            :reset_session_after_logout => true
+            :reset_session_after_logout => true,
+            :basic_auth_enabled => true
           }.merge(options)
           
           if mhs_authentication_system_options[:allow_signup]
