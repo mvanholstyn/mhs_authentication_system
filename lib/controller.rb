@@ -129,7 +129,7 @@ module Mhs
               cookies[:remember_me_token] = { :value => model.remember_me_token , :expires => model.remember_me_token_expires_at }
             end
             set_current_user model 
-          elsif not ActionController::HttpAuthentication::Basic.authorization(request).blank? && self.class.login_controller.mhs_authentication_system_options[:basic_auth_enabled]
+          elsif self.class.login_controller.mhs_authentication_system_options[:basic_auth_enabled] && !ActionController::HttpAuthentication::Basic.authorization(request).blank?
             model = authenticate_with_http_basic do |login_attribute_value, password|
               login_attribute = self.class.login_model.mhs_authentication_system_options[:login_attribute]
               instance_eval(&self.class.login_model_scope).login(login_attribute => login_attribute_value, :password => password)
