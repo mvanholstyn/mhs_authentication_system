@@ -1,3 +1,4 @@
+Remove/Configure password_confirmation
 Replaces SHA1 with SecureRandom
 
 Overall
